@@ -320,7 +320,7 @@ citation,
 	 double         ca_s;                   /*  crown area in shrubs            */
 	 double         bait[PLANT_TYPES][AIT_SIZE];  /* basal area in taller       */
 	 double         cait[PLANT_TYPES][AIT_SIZE];  /* crown area in taller       */
-	 
+/* double         bal[PLANT_TYPES][AIT_SIZE];                                 */
 
 	 /* variables added for the CONIFERS_CIPS model */
 	 double			d12ba_c;				/* like the d6_area which is the	*/
