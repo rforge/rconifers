@@ -1,0 +1,82 @@
+THIS IS THE CHANGELOG OF THE "rconifers" PACKAGE
+
+Please note that only the most significant changes are reported here.
+
+A full ChangeLog is available in the log messages of the SVN repository.
+
+* We have added a new variant to the Rconifers package. 
+
+CHANGES IN VERSION 1.0-8
+
+* This version was modified by NCrookston using CRAN version 1.0.7 downloaded
+on April 29, 2014. 
+
+* Fixed errors that caused rconifers to fail CRAN checks. 
+
+* Adjusted authorship to reflect current contributions.
+
+* Made Martin Ritchie the maintainer.
+ 
+CHANGES IN VERSION 1.0-7
+
+* A variant was added (CONIFERS_SWOHYBRID), developed by Martin Ritchie, of 
+USDA FS at PSW Redding, to examine the influence of climate model variables 
+in the CONIFERS_SWO simulator variant.
+
+* A preliminary quality assurance test was added by using the examples from the 
+R documentation. Not all operating systems and computer architectures will pass. 
+
+* renamed fill_in_missing_values function to impute_missing_values and updated the 
+function to accept arguments for new variants. 
+
+* moved coefficients version and model version numbers into coeffs_[var].c files.
+
+* added an output when the package initializes to display both the 
+model version and coefficients version.
+
+* removed strset which is not ANSI compliant and replaced with memset 
+which is ANSI compliant. 
+
+* Added compliance with building for R 2.14.0 as all packages now need a namespace. 
+
+CHANGES IN VERSION 1.0-6
+
+* This NEWS file was added.
+
+* The code for the fill_in_missing values function was modified to better 
+accomodate the multiple variants.
+
+
+CHANGES IN VERSION 0.0-6
+
+* We have made two changes to the Rconifers package. The first was a
+simple documentation change. Users must now include data with all
+fields identified, even if they contain only missing values. The
+simulator assumes input data with all fields properly labeled and will
+now respond with a warning message if this condition is not met.
+
+* The second change involved the genetic gain component of the simulator
+which operates only on the SMC variant, and only on Douglas-fir. The
+Rconifers package will now accept the switch to turn on this feature
+(use_genetic_gain).
+
+* The new version of the R package is version 1.0.3, and can be loaded
+from the CRAN site in the usual manner. If you encounter any problems
+with the package, please contact me at the email below.
+
+CHANGES IN VERSION 0.0-5 AND BEFORE
+
+* We have released a new version of the simulator: Version 4.12. There
+is only one change in this version. The installation routine is now
+Microsoft Windows enabled. The actual code has not undergone any
+change and results should be the same as the earlier version (4.11).
+
+* The URL below is the site to visit if you want to download version 4.12: 
+
+http://www.fs.fed.us/psw/programs/ecology_of_western_forests/projects/conifers
+
+* please take a look at the log messages of the SVN repository on R-Forge
+
+* $Id: NEWS 866 2012-02-22 21:54:18Z hamannj $	
+
+
