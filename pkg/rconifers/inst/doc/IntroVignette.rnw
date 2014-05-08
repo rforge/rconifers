@@ -1,0 +1,567 @@
+\documentclass[letter,11pt]{article}
+
+
+% \VignetteIndexEntry{CONIFERS package in R} 
+% \VignetteDepends{rconifers} 
+% \VignetteKeyword{simulation} 
+% \VignetteKeyword{forest}
+% \VignetteKeyword{growth}
+
+%% to extract the newly created vignette package, you can either issue
+%% this command, 
+%% macbook-3:trunk hamannjd$ tar xvfz rconifers_1.0.6.tar.gz rconifers/inst/doc/introvignette.pdf
+%% or just install the file....
+
+
+\topmargin 0.0in
+\oddsidemargin 0.0in
+\textwidth 6.5in
+\textheight 9.0in
+\headsep 0.0in
+
+\usepackage[utf8]{inputenc}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\usepackage{Sweave}     % this is in the R paths...
+\usepackage{amssymb,amsmath,upgreek}
+
+%% this will be moved to the chapter title, after submission
+\title{CONIFERS package in R: \texttt{rconifers}}
+
+
+\author{
+Martin W. Ritchie\\PSW Redding\\3644 Avtech Parkway\\Redding, California  96003\\USA\\mritchie@fs.fed.us
+\and
+Jeff D. Hamann\\Forest Informatics\\P.O. Box 1421\\Corvallis, Oregon 97333\\USA\\jeff.hamann@forestinformatics.com
+}
+
+\date{\today}
+
+\allowdisplaybreaks[1]
+
+\begin{document}
+%\SweaveOpts{concordance=TRUE}
+
+\baselineskip=15pt              % set line spacing to 1.5
+\clubpenalty=10000              % Suppress all club (orphan) lines
+
+\maketitle
+
+\abstract{
+CONIFERS is a model for young stand growth developed by personnel at the USFS
+Pacific Southwest Research Station in Redding, California. Although originally developed
+with a graphical user interface (GUI), currently only the dynamic linked library (dll) and an
+R package are supported and updated. The current version of the software includes four variants.
+The original version (SWO) of the project is for growth of mixed-conifer plantations
+in Southern Oregon and Northern California (SWO). The second is a Stand Management Cooperative (SMC) variant for
+northwest Oregon and western Washington, developed using data from research cooperatives.
+Variant 3 is a process/hybrid version of SWO. The final Variant was developed by
+Doug Maguire and Doug Mainwaring of the Center for Intensive Planted-Forest
+Silviculture (CIPS) at Oregon State University.
+
+}
+
+
+\section{Introduction}
+\label{sec:introduction}
+
+Forecasts of forest growth and yield are critical elements used in the management of
+forested lands.
+Managers rely on forecasts of stand development to evaluate anticipated silvicultural
+prescriptions, and as a guide in forest-level planning
+of timber harvests and other management activities. Ideally, simulators should be able to provide users
+with a means to forecast development of stands across the full range of
+anticipated stand conditions. In general, simulators for established stands are
+ineffective at simulating the growth of very young stands, or any stand in which
+non-tree vegetation contributes significantly to the level of competitive
+stress to which trees are exposed. Examples of established stand simulators for application in the western United States include
+FVS \citep{wykoff+crookston+stage-1982}, ORGANON \citep{Hann-2006} and
+CACTOS \citep{wensel+daugherty+meerschaert-1986}.
+
+Young stand simulators, designed to handle young plantations include SYSTUM-1 \citep{ritchie+powers-1993},
+RVMM \citep{knowe+radosevich+shula-2005}, and CONIFERS \citep{ritchie+hamann-2006}.
+CONIFERS has been through numerous updates and was originally implemented with a
+graphical user interface (GUI). However maintenance of the GUI presented a significant drain on limited resources,
+so it is no longer updated or supported (although still available). Therefore,
+the growth and other key functions have been ported to a dll and the \texttt{rconifers} package.
+
+CONIFERS is currently supported in two formats. The functionality of the model can
+be accessed using the \texttt{dll} or with an R package (\texttt{rconifers}) that calls the \texttt{dll}.
+Direct application of the \texttt{dll} is for advanced users and is not the subject of this presentation.
+
+\subsection{Why R?}
+\label{sec:whyr}
+
+The easiest way to access the CONIFERS model is through the R analysis system \citep{r-citation}.
+Although unfamiliar to many foresters, R is a powerful analysis package and the steps required
+to load and run the CONIFERS Variants are fairly simple. This is done is by first installing R
+then the \texttt{rconifers} package into the R system.
+Once installed the complete functionality of CONIFERS
+is at available as will be demonstrated in examples.
+
+There are two advantages to using \texttt{rconifers}. First, with R the user has powerful
+analyitical tools, including the abilty to develop many types of graphical images for analyses.
+Second, most of the supporting R functionality is maintained
+independently, thus reducing code maintenance for CONIFERS. There are fewer problems with
+code maintenance needed to mantain currency with the Microsoft operating system.
+We avoid, to a large extent, the problem of software obsolescence which has been
+a chronic problem with simulator development over the last 30 years.
+
+We should mention that R is freely available to anyone with connection to the internet. Thus software
+distribution is simplified as well.
+
+\subsection{Installing R}
+\label{sec:intstallR}
+
+The installation process is not time consuming but it does require a few steps.
+The first thing a user will need to do is install R. This is a simple process which is initiated
+by opening a browser and accessing the CRAN web site (\texttt{\href{http://cran.r-project.org}{http://cran.r-project.org}}).
+At this website there is a lot of information that you really don't need for the task at hand.
+To obtain a Windows executable, the user should choose to download R for Windows.
+If you have another operating system choose accordingly; we will continue with the installation example for Windows.
+
+The next step is to select: install R for the first time. And, finally: Download R for Windows.
+In this last link there will be a version number and this will update from time to time.
+When prompted, save the installation file to a handy location and then install
+as you would any Windows software. If you wish to upgrade at any time to the most current version of R,
+simply repeat this process.
+
+During the installation, we recommend beginners just choose the defaults.
+For Windows you will be prompted to choose a 64 or 32 bit installation. If you have a 64 bit version of Windows,
+choose the 64 bit installation. If you have 32 bit or are not sure, choose the 32 bit installation.
+Once installed you should find the icon on your desktop for R. Double-click and R will open providing a command-line prompt
+and an array of drop down menus across the top.
+
+\subsection{Installing \texttt{rconifers}}
+\label{sec:intstall-rconifers}
+
+Step 2 is to install the \texttt{rconifers} package. From within R many packages
+for various types of analysis are available. The rconifers package is just one of many to choose from.
+To install the \texttt{rconifers} package, choose Packages:Install Package(s).
+Then choose a nearby mirror and select OK.
+Finally you will see a long scrollable list presenting packages alphabetically.
+Choose \texttt{rconifers} by scrolling down and select OK.
+This completes installation of R and the \texttt{rconifers} package.
+
+This step need only be executed once unless there is an update or you change to a newer version of R.
+
+\subsection{Loading \texttt{rconifers}}
+\label{sec:load-rconifers}
+
+One of the confusing aspects of R, for beginners, is the difference between installing and loading a package.
+The simple version of this is that installing is done once. Loading, however, is done every time you open R,
+if you choose to run \texttt{rconifers} in
+that particular session. One way to think of this is that installing places the package on your machine.
+Whereas loading makes that particular package available for any particular session in R. To load the package,
+type \texttt{library(rconifers)} at the R prompt.
+
+\section{Application of \texttt{rconifers}}
+\label{sec:application}
+
+We will illustrate the use of \texttt{rconifers} with the r-script below. We will use the
+{SWO} variant (set.variant=0) and the sample plant list for swo that comes with the \texttt{rconfiers} package (\texttt{plants.swo}).
+The first line is a comment for the user's benefit. R will ignore lines starting with \#.
+You will notice the first executable step is the \texttt{library} command. This loads the \texttt{rconifers} package for this run.
+It is good form to load any packages you might need right up front just to get this step out of the way.
+Notice the form of the statement: \texttt{library(rconifers)}. The first part, \texttt{library}, is a function call
+recognized by R. It means simply go fetch a package that we have already installed.
+Inside the brackets is the \emph{argument} for the function: \texttt{rconifers}.
+Some function calls will have more than one argument, separated by commas.
+
+You will notice a data function call a few steps down. This function works much like \texttt{library}, in that
+it retrieves data that has been installed. When \texttt{rconifers} was installed, several test data sets were included.
+One of these is called \texttt{plots.swo}, another is \texttt{plants.swo}.
+These are respectively: (1) a file with the list of plots sampled with some additional information,
+and (2) the associated plants that were sampled on these plots. It is rather important that these
+two files match up.
+
+<<<eval=TRUE,echo=TRUE>>=
+## load the rconifers library
+library( rconifers )
+
+## set the number of digits for the output to five (5)
+options(digits=5)
+
+## set the variant to the SWO variant (variant=0)
+set.variant(0)
+
+## set the species map as swo for this run
+data( species.swo )
+set.species.map( species.swo )
+
+# load CONIFERS SWO example plots
+data( plots.swo )
+
+# load CONIFERS SWO example plants
+data( plants.swo )
+@
+
+At this point we have set the variant to 0 (\texttt{set.variant(0)}). It may seem confusing that the first Variant is called with
+\texttt{set.variant(0)}. This is a programming issue related to the native language of CONIFERS,
+which is ANSI C. In the C language indexing begins at zero by default. The four CONIFERS Variants
+thus are are indexed then from 0 to 3.
+
+Next, for this example, we are going to modify the data a bit. We have a tree in this file that is a large
+white fir overstory tree that I wish to remove from this run. The big white fir happens to be the third plant in the list.
+If you want to see it, type \texttt{plants.swo[3,]} at the R prompt. This serves the purpose of illustrating the indexing
+of data frames in R. Data frames are indexed by rows and then columns so \texttt{plants.swo[3,]} tells R
+that you wish to view row 3 and all columns of the data frame.
+If you want to view the entire plant list type \texttt{plants.swo}
+at the R prompt and you will see a print out of the entire sample.
+If you leave it in, CONIFERS will attempt to grow this tree, but it
+may not do a very good job of it. It is, after all, a simulator for young plantations
+so this represents an extrapolation of our data.
+For now, we will remove it with a powerful little R command that may seem confusing.
+
+<<<eval=TRUE,echo=TRUE>>=
+## modify so we eliminate any overstory >40 inches
+plants1.swo <- plants.swo[plants.swo$d6<40.0,]
+@
+
+First notice the assignment operator: \texttt{<-}.
+This tells R to assign what is on the right into what is on the left. In other words, make a new version of plants.swo
+called plants1.swo. These are structured data objects called data frames in R. As such, they are two dimensional arrays with column headings.
+They may be used as a template format for any sample data to be used in \texttt{rconifers}. So \texttt{plants.swo} has rows and columns specified
+to conform to that required by \texttt{rconifers}.
+
+To confirm this format type \texttt{dim(plants.swo)} at the command prompt to obtain the number of rows and columns in this particular file (60 and 9).
+If you type \texttt{names(plants.swo)} you will see a list of the fields in the data frame
+that \texttt{rconifers} wants to see.
+These are the plot, species code (sp.code), basal diameter (d6) in inches, breast height diameter (inches),
+total height (feet), live crown ratio (cr), number of stems per plant (n.stems),
+the per-acre expansion factor (expf) and the crown width (crown.width) in feet.
+The expansion factor is a transformation of the plot area in square feet:
+
+\begin{equation}
+expf = \frac{43560}{plot\:area}.
+\end{equation}
+
+To view a single element of the sample plants data frame, type \texttt{plants.swo[3,4]} at the command prompt in R.
+R will return a value of 35.2. This is the diameter of the 3rd plant (row three) in the original plant list. The dbh happens to be
+the fourth column in the data frame called \texttt{plants.swo}. So in the line of code assigning \texttt{plants1.swo}
+above, since we didn't specify a column, all
+columns are moved into \texttt{plants1.swo}. However because we specified which rows on the right side to include, the new file
+only includes those in which d6 (basal diameter) is less than 40 inches. So the new file \texttt{plants1.swo}
+doesn't include that big white fir because the basal diameter exceeded 40.0.
+
+One other litte exercise is to type \texttt{plants.swo[3,2]} at the command prompt. You will notice this returns column two of the third tree
+in the list: the species code. Additionally, R throws in something else: the list of all species found in the file.
+
+If we want to confirm that there aren't any other giant trees in the file,
+we can tell R to display all the individuals in
+the \texttt{plants1} data frame that have a height less than 7.0 feet. You will notice the big
+white fir is not in the list and there are no other large trees.
+
+<<<eval=TRUE,echo=TRUE>>=
+## view trees bigger than 7.0 feet in height
+plants1.swo[plants1.swo$tht>7.2,]
+@
+
+Finally, we are going to create what is called a \texttt{sample.data} list object.
+This object encapsulates all the information about a stand needed to forecast growth and do the associated bookeeping.
+There are five arguments in the list. In addition to the plants and plots we assigned a stand age (0) and the number of years
+of growth we have simulated at this point (also 0) as well as \emph{x0}. This last value helps determine the rate of mortality and for
+young stands we start it out at zero \citep{hann+wang-1990}.
+
+<<<eval=TRUE,echo=TRUE>>=
+## create the sample.data list object
+sample.swo <- list( plots=plots.swo, plants=plants1.swo, age=3, x0=0.0, n.years.projected=0 )
+class(sample.swo)  <- "sample.data"
+## display the sample list object summary
+sample.swo
+@
+
+This summary shows that we have a 3 year old plantation which has some competing
+vegetation. CEIN (deerbrush) is at 250 stems per acre and COCO (California hazel) is at
+825 stems per acre total and of these 375 stems per acre are greater than 4.5 feet in height.
+In addition this stand has PM (Pacific madrone) at 650 per acre (625 abh). The conifers in this
+stand include WF and PP (white fir and ponderosa pine) at 275 and 100 trees per acre respectively.
+There is also some DF ({Douglas-fir}) and IC (incense-cedar).
+
+We can also quickly plot a summary of this stand by calling the \texttt{plot} function which produces a
+four panel plot(Figure~\ref{fig:starting.plot}):
+
+<<label=starting.plot, include=false,echo=true>>=
+## plot the sample
+plot(sample.swo)
+@
+
+\begin{figure}[!h]
+\centering
+
+<<fig=TRUE, echo=false, eval=TRUE, width=6, height=5, label=sample-plot-at-start>>=
+<<starting.plot>>
+@
+\caption[]{Summaries of the initial observed stand conditions (age 3).}
+\label{fig:starting.plot}
+\end{figure}
+
+Some closing notes on executing R code. R documentation, such as this typically contains executable code snippets
+that the user may cut and paste into the R prompt at any time. If you do so, your results should match those
+in the documentation. For more complicated projects a series of commands are often created
+in a plain text editor. Many text editors are availiable online and some of these
+will provide helpful highlighting for documents with a .r extension as is the convention for
+R scripts.
+
+If you ever find yourself lost in R, help can be found by typing \texttt{help.start()} at
+the command prompt. This will provide a reference page. Help for any installed packages
+may be accessed by selecting packages on the reference page.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Growth}
+\label{sec:growth}
+
+Forecasting growth with conifers is done with the project command.
+It is possible to grow in individual annual increments or you can choose to grow
+for a longer time span and return the results. While CONIFERS places no limits on maximum age,
+any projection beyond about 25 year of age is not advised.
+For this example we first set random error component off (rand.err=0)
+and set the random seed to an arbitrary integer (107). Mortalilty is turned off and we
+selected a 15 year growth projection.
+
+<<<eval=TRUE,echo=TRUE>>=
+# now, project the sample forward for 15 years, no mortality
+# with all of the options turned off
+sample.swo.18 <- project( sample.swo, 15,
+	  control=list(rand.err=0,rand.seed=107,endemic.mort=0,sdi.mort=0))
+sample.swo.18
+@
+
+We can also plot a summary at age 18 by calling the plot function as we did earlier
+(Figure~\ref{fig:ending.plot}).
+
+<<label=starting.plot, include=false,echo=true>>=
+## plot the sample
+plot(sample.swo.18)
+@
+
+\begin{figure}[!h]
+\centering
+
+<<fig=TRUE, echo=false, eval=TRUE, width=6, height=5, label=sample-plot-at-age-18>>=
+<<starting.plot>>
+@
+\caption[]{Summaries of the stand conditions forecast at age 18.}
+\label{fig:ending.plot}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{CONIFERS Variants}
+\label{sec:conifers-variants}
+
+\subsection{Southwest Oregon Variant}
+\label{sec:swo-variant}
+The SWO variant (\texttt{set.variant=0}) was the first variant of CONIFERS
+\citep{ritchie+hamann-2008}. It was developed, using data from stands in southwest Oregon and
+northern California (Figure~\ref{fig:fig.of.v1.data}). Stands were mixed-conifer, heavy to
+{Douglas-fir} in southern {Oregon} and heavy to ponderosa pine in northern {California}.
+The age range for these plantations was from 3 years to about 23 years however there were
+few stands above 18 years of age. This variant does not use site index but does require water holding capacity
+(in inches) in the \texttt{plots} file.
+Competing vegetation is handled on an individual-plant basis \citep{ritchie+hamann-2006}.
+
+The CONIFERS simulator was built on the foundation laid by the SYSTUM-1 project.
+The primary weakness of SYSTUM-1 was that very little data were available for
+young stands in which competing vegetation was quantified.
+If a robust system of equations was to be developed for a simulator,
+it would necessitate a data collection effort specifically for that project.
+In 1994 a data collection effort for the Klamath province was initiated with the
+intent of building a suite of functions for a young stand simulator.
+Data were collected on each selected stand on a two year interval.
+The initial measurement was followed by a re-measurement two years later.
+The remeasurement was conducted on a date as near to the original as possible so
+that the result provided two full growing seasons for each site.
+On most stands the remeasurement was within one week of the original date of
+initial measurement.
+
+Stands were sampled in northern California and southern Oregon,
+from southern Trinity county in the south, to Douglas County in the north.
+Sites were selected from National Forest Land and sites on BLM land in Oregon.
+In addition, a limited number of sites under private ownership were sampled in
+northern California.
+All sites were plantations less than 26 years of age at the time of the initial
+measurement, and very few were older than 18 years initially.
+Some sites had some overstory trees from a previous stand.
+About 21 percent had greater than 20 square feet of basal area per acre on one
+or more plots in trees > 12 inches in diameter at breast height.
+Only about 11 percent had greater than 20 square feet of basal area per acre on
+two or more plots.
+
+Candidate stands were selected from across a range of ages and elevations by
+first stratifying all potential stands into age and elevation classes.
+It should be noted, however, that budgetary and time constraints limited the
+number of stands sampled to 109, the last of these were established in 1998
+and remeasured in 2000 at the southern end of the sampled area.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=3.0in]{locate8}
+\caption[]{Plot locations for SWO variant of CONIFERS.}
+\label{fig:fig.of.v1.data}
+\end{figure}
+
+\subsection{Stand Management Cooperative Variant}
+\label{sec:smc-variant}
+
+The SMC variant (\texttt{set.variant=1}) was developed by Nicholas Vaughn and Martin Ritchie
+and released in 2008 \citep{vaughn-2007,vaughn+turnblom+ritchie-2010}. Funding was
+provided by Agenda 2020.
+Data were contributed from the Stand Management Cooperative at the University of Washington
+and the RVMM project courtesy of Steve Radosevich at Oregon State University.
+The combined data set included 220 separate sites primarily in Oregon and Washington (Figure~\ref{fig:fig.of.v2.data}).
+Top height varied from 1 to 47.2 feet with a mean of 19.6. Although this distribution is highly skewed and
+most observed tree heights were less than 14 feet.
+
+This variant only grows Douglas-fir trees and competing vegetation is handled
+differently than the original SWO variant. There was a limited amount of data for
+western hemlock, but these were not included in the development of the SMC variant.
+
+Whereas in the SWO variant competing vegetation is grown as individual plants,
+in the SMC variant competing vegetation is modeled as an aggregate cover and
+height, much as it was in the original SYSTUM-1 model \citep{ritchie+powers-1993}.
+Site productivity is reflected in site index at base age 30 provided in the \texttt{plot file}
+ \citep{flewelling+collier+gonyea+marshall+turnblom-2001}. The original GUI provided a
+conversion from base age 50 \citep{flewelling+collier+gonyea+marshall+turnblom-2001},
+but users must make this conversion on thier own for the SMC variant of \texttt{rconifers}.
+
+\clearpage
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=3.0in]{SMC_map}
+\caption[]{Plot locations for SMC variant of CONIFERS.}
+\label{fig:fig.of.v2.data}
+\end{figure}
+
+\subsection{Hybrid SWO Variant}
+\label{sec:hybrid-variant}
+
+The hybrid variant (\texttt{set.variant=2}) is based on the same data as SWO but uses a different approach
+for quantifying site productivity. Whereas SWO uses water holding capacity, this Variant uses
+temperature and precipitation (growing season) to power growth forecasts. We essentially employed the
+lightsum approach in developing primary predictive equations \citep{mason+methol+cochrane-2011}.
+The only modified growth functions in this variant are for {Douglas-fir} and ponderosa pine. At this time
+there are no functions for competing vegetation.
+
+At this point in time the hybrid variant should be viewed as a prototype as it is largely untested.
+
+\subsection{CIPS Variant}
+\label{sec:cips-variant}
+
+The CIPS/VMRC variant (\texttt{set.variant=3}) was developed to simulate the response
+of young Douglas-fir trees in western Oregon and Washington to varying levels
+of competing vegetation (Figure~\ref{fig:fig.of.v4.data}).
+The modeling database was drawn from the Vegetation Management
+Research Cooperative (VMRC) and the Pacific Northwest Research Station.
+Growth data were from 16 different sites distributed among six different studies.
+There were four VMRC data sets: the Critical Period Threshold Study
+(CPT) \citep{maguire+mainwaring+rose+garber+dinger-2009}, the HERB1 study
+\citep{rose+rosner-2005}, Evaluating Common Regimes (ECR), and Two Meters in Two Years (TMTY).
+Data from two additional studies, the Matlock/Moalla field trials, and the
+CRAFTS B study, were provided by PNW Reasearch Station. This variant
+also uses site index \citep{flewelling+collier+gonyea+marshall+turnblom-2001}.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=3.0in]{locatev4}
+\caption[]{Plot locations for CIPS/VMRC variant of CONIFERS.}
+\label{fig:fig.of.v4.data}
+\end{figure}
+
+Growth trends described by this database represented responses to a wide
+range of experimentally manipulated levels of competing vegetation.
+The field trials were designed specifically to test the efficacy of different
+intensities of competing vegetation control on {Douglas-fir} growth and
+survival. The database included 102,573 observations on 15,821 trees from
+354 plots. Initial tree heights ranged from 0.3 feet to 13.6 feet.
+
+The field trials from which data were compiled to construct the CIPS/VMRC
+equations were large and often complex study designs, so only a limited number
+of sites were represented. Site quality was generally higher than average
+for the region, but the geographic range was similar to that of the database
+for the SMC variant of CONFERS.
+
+The CIPS/VMRC variant was made possible by financial support from the Center
+for Intensive Planted-Forest Silviculture (CIPS) and generous contribution of
+data and expertise from Robin Rose, Eric Dinger and Tim Harrington.
+similar to that of the database for the SMC variant of CONIFERS
+(Figure~\ref{fig:fig.of.v4.data}).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\baselineskip=10pt
+\bibliographystyle{apalike}
+\bibliography{conifers}
+
+\newpage
+
+\section*{Appendix}
+\label{sec:appendix}
+
+\subsection*{A1. Plants Data}
+\label{sec:plants-data}
+
+\begin{enumerate}
+ \item plot = Plot number (positive integer value)
+ \item sp.code = Species Code (text string) e.g. "DF" or "WF"
+ \item d6 = basal diameter (inches)
+ \item dbh= breast height diameter (inches)
+ \item tht = total tree height (feet)
+ \item cr = live crown ratio, crown length divided by total tree height
+ \item n.stems = number of stems per plant
+ \item expf = expansion factor (plants per acre represented by this tree)
+ \item crown.width = crown width (feet)
+\end{enumerate}
+
+The simulator does requires that these values are all present for growth but some may be imputed through the
+\texttt{impute} function supplied with \texttt{rconifers}. Height is required input but diameters and
+crown widths may be imputed.
+
+\subsection*{Species Codes}
+\label{sec:species-codes}
+
+SWO and SWO hybrid Primary Species Codes in the plants data frame
+
+\begin{enumerate}
+ \item DF = Douglas-fir
+ \item PP = ponderosa pine
+ \item WF = white fir
+ \item SP = sugar pine
+ \item IC = incense-cedar
+ \item RF= California red fir
+ \item WH = western hemlock
+ \item OC= other conifer
+ \item PM = Pacific madrone
+ \item GC = golden chinkapin
+ \item BM= bigleaf maple
+ \item TO = tanoak
+ \item ARPA = greenleaf manzanita
+ \item CEVE = snowbrush
+ \item CEIN = deerbrush
+ \item NS = Not stocked
+\end{enumerate}
+
+These and more can be found in \texttt{data(species.swo)}
+
+SMC and CIPS Species Codes for the plants data frame plot
+
+\begin{enumerate}
+ \item DF = Douglas-fir
+ \item CV = competing vegetation
+ \item NS = Not stocked
+\end{enumerate}
+
+SWO hybrid Species Codes for the plants data frame
+\begin{enumerate}
+ \item DF = Douglas-fir
+ \item PP = competing vegetation
+ \item NS = Not stocked
+\end{enumerate}
+
+Note that SWO hybrid does not handle competing vegetation at this time. \\
+NS is used as a placeholder for a plot with no observed plants
+
+\end{document}
+
+
+
