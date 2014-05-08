@@ -2016,7 +2016,6 @@ void __stdcall impute_missing_values(
 
 	    case CONIFERS_CIPS:
             /* this function is in model_cips.c */
- /*
             cips_impute( 
 			        return_code,
 			        n_species,
@@ -2031,7 +2030,6 @@ void __stdcall impute_missing_values(
 			        fixed_plot_radius,
 			        min_prism_dbh,
 			        baf );
-*/
             break;
 
 	    default:

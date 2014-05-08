@@ -1,5 +1,5 @@
 
-/* 	$Id: coeffs_mgt.c 861 2012-02-22 21:25:32Z hamannj $	 */
+/* 	$Id: coeffs_mgt.c 878 2012-04-04 19:27:41Z hamannj $	 */
 
 #include <math.h>
 #include <memory.h>
@@ -44,8 +44,13 @@ struct COEFFS_RECORD *con_init_coeffs(
 	    break;
 
       case CONIFERS_CIPS:
-	    //c = (struct COEFFS_RECORD *)con_cips_init_coeffs( n_coeffs, coeffs_version, model_version );
+	    c = (struct COEFFS_RECORD *)con_cips_init_coeffs( n_coeffs, coeffs_version, model_version );
 	    break;
+
+      /* todo: step #5 - put your init_coeffs() function call here */
+      //case CONIFERS_[VARIANT]:
+	  //  c = (struct COEFFS_RECORD *)con_[VARIANT]_init_coeffs( n_coeffs, coeffs_version, model_version );
+	  //  break;
 
       default:
 	    c = (struct COEFFS_RECORD *)con_swo_init_coeffs( n_coeffs, coeffs_version, model_version );

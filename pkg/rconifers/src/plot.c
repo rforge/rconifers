@@ -25,10 +25,10 @@
 /*                                                                              */
 /********************************************************************************/
 
-/* 	$Id: plot.c 854 2012-02-06 23:37:24Z hamannj $	 */
+/* 	$Id: plot.c 930 2014-01-29 21:48:28Z mritchie $	 */
 
 /* #ifndef lint */
-/* static char vcid[] = "$Id: plot.c 854 2012-02-06 23:37:24Z hamannj $"; */
+/* static char vcid[] = "$Id: plot.c 930 2014-01-29 21:48:28Z mritchie $"; */
 /* #endif /\* lint *\/ */
 
 
@@ -279,7 +279,7 @@ void get_plant_indecies_for_plot(
 
     unsigned long       i;
     int                 first_record_found;
-    int                 last_record_found;
+    //int                 last_record_found;  // unused mwr jan 2014;
     struct PLANT_RECORD *plant_ptr;
 
 
@@ -288,7 +288,7 @@ void get_plant_indecies_for_plot(
     *n_plant_records_on_plot    = 0;
 
     first_record_found  = 0;
-    last_record_found   = 0;
+    //last_record_found   = 0; // unused mwr jan 2014 ;
 
     plant_ptr = &plants_ptr[0];
     for( i = 0; i < n_plants; i++, plant_ptr++ )
@@ -443,13 +443,13 @@ void reduce_pct_cover(
 {
 
     unsigned long       i;
-    unsigned long       j;
-    double              expf_redux;
+    //unsigned long       j;  // unused now, was in block below jan 2014;
+    //double              expf_redux;  // unused, removed jan 2014 mwr;
     struct PLANT_RECORD *plant_ptr;
-    double              current_cov;
+    //double              current_cov; // unused, removed jan 2014 mwr;
     double              ending_cov;
-    struct PLOT_RECORD *plot_ptr;
-    double              plot_cover;
+    //struct PLOT_RECORD *plot_ptr;  // unused removed jan 2014 mwr;
+    //double              plot_cover;  // unused, removed jan 2014 mwr;
     /* don't bother if the thinning will add    */
     /* to the expansion factor                  */
     if( target_pct < 0.0 || target_pct > 100.0 )
@@ -457,7 +457,7 @@ void reduce_pct_cover(
         return;
     }
 
-    expf_redux = 0.0;
+    // expf_redux = 0.0;  // unused, removed jan 2014 mwr
     
     plant_ptr = &plants_ptr[0];
     for( i = 0; i < n_plants; i++, plant_ptr++ )
@@ -467,17 +467,19 @@ void reduce_pct_cover(
         /* pct_cover value for the record                   */
         if( plant_ptr->sp_idx == target_sp )
         {
-            plot_ptr   = &plots_ptr[0];
-            plot_cover = 0.0;
-
-            for( j = 0; j < n_plots; j++, plot_ptr++)
-            {
-                if(plot_ptr->plot == plant_ptr->plot)
-                {
-                    plot_cover = plot_ptr->shrub_pct_cover;
-                }
-            }
-            current_cov = 100*(MY_PI*plant_ptr->expf*plant_ptr->crown_width*plant_ptr->crown_width/4.0)/SQ_FT_PER_ACRE;
+            //plot_ptr   = &plots_ptr[0]; // unused removed jan 2014;
+            //plot_cover = 0.0;  // unused remvd jan 2014 mwr;
+            // this block of code unused, removed jan 2014;
+            //for( j = 0; j < n_plots; j++, plot_ptr++)
+            //{
+            //    if(plot_ptr->plot == plant_ptr->plot)
+            //    {
+            //        plot_cover = plot_ptr->shrub_pct_cover;
+            //    }
+            //}
+            //current_cov = 100*         // removed this stmt jan 2014 mwr
+            //(MY_PI*plant_ptr->expf*
+            //plant_ptr->crown_width*plant_ptr->crown_width/4.0)/SQ_FT_PER_ACRE;
             ending_cov  = 100.0-(double)target_pct;
 
             if( ending_cov < current_pct && ending_cov >= 0.0 && current_pct >= 0.0)

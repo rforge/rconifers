@@ -36,10 +36,10 @@
 /*                                                                              */
 /*------------------------------------------------------------------------------*/
 
-/* 	$Id: model_swo.c 854 2012-02-06 23:37:24Z hamannj $	 */
+/* 	$Id: model_swo.c 930 2014-01-29 21:48:28Z mritchie $	 */
 
 /* #ifndef lint */
-/* static char vcid[] = "$Id: model_swo.c 854 2012-02-06 23:37:24Z hamannj $"; */
+/* static char vcid[] = "$Id: model_swo.c 930 2014-01-29 21:48:28Z mritchie $"; */
 /* #endif /\* lint *\/ */
 
 
@@ -283,9 +283,9 @@ void swo_impute(
   double  bait[PLANT_TYPES];
   double  cait[PLANT_TYPES];
 
-  double        cait_c;
-  double        cait_h;
-  double        cait_s;
+  //double        cait_c;  //unused removed jan 2014 mwr;
+  //double        cait_h;  //unused removed jan 2014 mwr;
+  //double        cait_s;  //unused removed jan 2014 mwr;
 
   error_count  = 0;
   *return_code = CONIFERS_SUCCESS;
@@ -583,9 +583,9 @@ void swo_impute(
 		    get_in_taller_attribs( plant_ptr, plot_ptr, bait, cait );
             
 
-		    cait_c       =   cait[CONIFER];
-		    cait_h       =   cait[HARDWOOD];
-		    cait_s       =   cait[SHRUB];
+		    //cait_c       =   cait[CONIFER];     // unused removed jan 2014;
+		    //cait_h       =   cait[HARDWOOD];    // unused removed jan 2014;
+		    //cait_s       =   cait[SHRUB];       // unused removed jan 2014;
 		    *return_code = CONIFERS_SUCCESS;
 
 		          swo_calc_crown_ratio(return_code,  
@@ -673,19 +673,19 @@ void swo_project_plant(
 {
 
    struct COEFFS_RECORD    *c_ptr;
-   double                  awi;
+   //double                  awi;        // cruft mwr jan 2014;
 
    /* tree level stats */
-   double  bat_total;
-   double  bat_c;
-   double  bat_h;
-   double  bat_s;
-   double  bat_c_h;
+   //double  bat_total;   // cruft mwr jan 2014;
+   //double  bat_c;
+   //double  bat_h;
+   //double  bat_s;
+   //double  bat_c_h;    // cruft mwr jan 2014;
    double  cat_c;
    double  cat_h;
    double  cat_s;
-   double  new_d6_area;
-//      double  new_d12_area;
+   //double  new_d6_area;  // cruft mwr jan 2014;
+   //double  new_d12_area;  // cruft mwr jan 2014;
 
 
 /*    unsigned long htidx = 0; */
@@ -722,7 +722,7 @@ void swo_project_plant(
    /* calc diam growth...              */
    /* calc crown recession...          */
    /* calc mortality...                */
-   awi         =   plot_ptr->water_capacity * log( plot_ptr->mean_annual_precip );
+   //awi         =   plot_ptr->water_capacity * log( plot_ptr->mean_annual_precip );
 
 
     /* this function takes a vector [PLANT_TYPES][TALLER_PLANT_SIZE] */
@@ -737,16 +737,16 @@ void swo_project_plant(
                             bait, 
                             cait );
 
-   bat_c       =   bait[CONIFER];
-   bat_h       =   bait[HARDWOOD];
-   bat_s       =   bait[SHRUB];
+   //bat_c       =   bait[CONIFER];  //cruft mwr jan 2014;
+   //bat_h       =   bait[HARDWOOD];
+   //bat_s       =   bait[SHRUB];
 
    cat_c       =   cait[CONIFER];
    cat_h       =   cait[HARDWOOD];
    cat_s       =   cait[SHRUB];
 
-   bat_c_h     =   bat_c + bat_h;
-   bat_total   =   bat_c + bat_h + bat_s;
+   // bat_c_h     =   bat_c + bat_h; // cruft jan 2014 mwr;
+   // bat_total   =   bat_c + bat_h + bat_s;  // cruft jan 2014 mwr;
 
    plant_ptr->tht_growth = 0.0;
    plant_ptr->d6_growth  = 0.0;
@@ -879,7 +879,7 @@ void swo_project_plant(
    /* the plant record...  need to calc    */
    /* a temp new d6 area, total height,    */
    /* and crown width                      */
-   new_d6_area = plant_ptr->d6 * plant_ptr->d6 * FC_I;
+   // new_d6_area = plant_ptr->d6 * plant_ptr->d6 * FC_I; // cruft mwr jan 2014
    
    if( is_tree( c_ptr ) || is_shrub( c_ptr))
    {
@@ -1677,11 +1677,6 @@ void calc_nstems_from_cw_and_height(
     *return_code        = CONIFERS_ERROR;
     *pred_n_stems       = 1;
         
-/*   manzanita coefficients   */
-//    b0                  = 0.5281850;
-//    b1                  = 0.8916970;
-//    b2                  = -0.067543;
-//    b3                  = -0.121772;
     temp_stems          = 1.0;
     int_stems           = 1;
 
@@ -1793,14 +1788,14 @@ void calc_d6_growth(
     double  b5;
     double  b6;
     double  b7;
-    double  b8;
-    double  b9;
-    double  b10;
-    double  b11;
-    double  b12;
-    double  b13;
-    double  b14;
-    double  b15;
+    //double  b8;
+    //double  b9;
+    //double  b10;
+    //double  b11;
+    //double  b12;
+    //double  b13;
+    //double  b14;
+    //double  b15;
 
     double  c0;
     double  c1;
@@ -1810,8 +1805,8 @@ void calc_d6_growth(
 
     double  temp_cat_total;
     double  sum_cat;
-    double  cat_hardwoods_conifers;
-	double  whc;
+    //double  cat_hardwoods_conifers;  // cruft mwr jan 2014;
+	  double  whc;
 
     /* initialize variables */
     *return_code=CONIFERS_SUCCESS;
@@ -1827,14 +1822,14 @@ void calc_d6_growth(
     b5  = 0.0;
     b6  = 0.0;
     b7  = 0.0;
-    b8  = 0.0;
-    b9  = 0.0;
-    b10 = 0.0;
-    b11 = 0.0;
-    b12 = 0.0;
-    b13 = 0.0;
-    b14 = 0.0;
-    b15 = 0.0;
+    //b8  = 0.0;    // cruft mwr Jan 2014;
+    //b9  = 0.0;
+    //b10 = 0.0;
+    //b11 = 0.0;
+    //b12 = 0.0;
+    //b13 = 0.0;
+    //b14 = 0.0;
+    //b15 = 0.0;
     c0  = 0.0;
     c1  = 0.0;
     c2  = 0.0;
@@ -1843,7 +1838,7 @@ void calc_d6_growth(
 
 
     sum_cat                = cat_shrubs + cat_conifers + cat_hardwoods; 
-    cat_hardwoods_conifers = cat_conifers + cat_hardwoods;
+    //cat_hardwoods_conifers = cat_conifers + cat_hardwoods; // cruft mwr 2014;
 
     if( coeffs_ptr == NULL )
     {
@@ -1885,14 +1880,14 @@ void calc_d6_growth(
 		b5  = coeffs_ptr[5];
 		b6  = coeffs_ptr[6];
 		b7  = coeffs_ptr[7];
-		b8  = coeffs_ptr[8];
-		b9  = coeffs_ptr[9];
-		b10 = coeffs_ptr[10];
-		b11 = coeffs_ptr[11];
-		b12 = coeffs_ptr[12];
-		b13 = coeffs_ptr[13];
-		b14 = coeffs_ptr[14];
-		b15 = coeffs_ptr[15];
+		//b8  = coeffs_ptr[8];
+		//b9  = coeffs_ptr[9];
+		//b10 = coeffs_ptr[10];
+		//b11 = coeffs_ptr[11];
+		//b12 = coeffs_ptr[12];
+		//b13 = coeffs_ptr[13];
+		//b14 = coeffs_ptr[14];
+		//b15 = coeffs_ptr[15];
 
 		dg_trees =   pow(height_growth, b1)
 					*exp(   b0                           
@@ -1907,7 +1902,7 @@ void calc_d6_growth(
 	}
 	else if(plant_type == SHRUB || plant_type == FORB)
 	{
-	    c0  = coeffs_ptr[0];
+	  c0  = coeffs_ptr[0];
 		c1  = coeffs_ptr[1];
 		c2  = coeffs_ptr[2];
 		c3  = coeffs_ptr[3];
@@ -2096,8 +2091,22 @@ void calc_height_growth(
 {
 
 /****************************  right now b25 and b26 are spares ******************************************/
-    double  b0,  b1,  b2,  b3,  b4,  b5,  b6,  b7,  b8,  b9,
-            b10, b11, b12, b13, b14, b15 ;
+    double  b0;
+    double  b1;
+    double  b2;
+    double  b3;
+    double  b4;
+    double  b5;
+    double  b6;
+    double  b7;
+    double  b8;
+    double  b9;
+    double  b10;
+    double  b11;
+    double  b12;
+    double  b13;
+    // double  b14; // cruft mwr jan 2014;
+    // double  b15; // cruft mwr jan 2014;
 
     double  whc;
 	double  height_var;
@@ -2153,8 +2162,8 @@ void calc_height_growth(
     b11                 = 0.0;
     b12                 = 0.0;
     b13                 = 0.0;
-    b14                 = 0.0;
-    b15                 = 0.0;
+    //b14                 = 0.0; // cruft mwr jan 2014;
+    //b15                 = 0.0; // cruft mwr jan 2014;
     
     broken              = 0;
     browsing            = 0;
@@ -2370,8 +2379,10 @@ void calc_cr_growth(
 
 
 /* (1)   first predict change in height to crown base              */    
-
-    hcb_growth  = b0 
+///  This needs to be checked mwr Jan 2014 pending check;
+///  I checked this with the original in Jan and it looks ok;
+///  I think we need to refit. This is kind of clunky.;
+    hcb_growth  = b0
                 + b1 * crown_length 
                 + b2 * 0.00001 * conifer_ca
                 + b3 * 0.00001 * hardwood_ca
@@ -2471,7 +2482,7 @@ void calc_cw_growth(
 	double  c4;
 	double  c5;
 	double  c6;
-	double  c7;
+	//double  c7;  // cruft mwr jan 2014;
 	double  c8;
 	double  c9;
 	double  c10;
@@ -2522,7 +2533,7 @@ void calc_cw_growth(
 	c4	    = coeffs_ptr[4];
 	c5	    = coeffs_ptr[5];
 	c6	    = coeffs_ptr[6];
-	c7	    = coeffs_ptr[7];
+	//c7	    = coeffs_ptr[7];  // cruft mwr jan 2014;
 	c8	    = coeffs_ptr[8];
 	c9      = coeffs_ptr[9];
 	c10     = coeffs_ptr[10];

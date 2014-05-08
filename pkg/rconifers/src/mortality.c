@@ -6,7 +6,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-/* 	$Id: mortality.c 853 2012-01-24 02:05:20Z hamannj $	 */
+/* 	$Id: mortality.c 930 2014-01-29 21:48:28Z mritchie $	 */
 
 /*------------------------------------------------------------------------------*/
 /*  functions index                                                             */
@@ -66,7 +66,7 @@ void calc_sdi_mortality(
    double yi;
    double xi;
    double y0;
-   double rd;
+   //double rd;
    int    i;
    double qq;			/* binary search interval */
    double tpa_iter;    /* target tpa from binary search */
@@ -75,7 +75,7 @@ void calc_sdi_mortality(
 
    /* trap zero sdimax I am not sure what else to do with this. */
    /* this should never happen because we only call for trees   */
-   if( sdimax == 0 )
+   if( sdimax <= 0.0001 )
    {
       *return_code = CONIFERS_SUCCESS;
       return;
@@ -103,7 +103,7 @@ void calc_sdi_mortality(
    a2 = -1.0f / REINEKE_B1;
    a1 = log(10.0f) - a2 * log(sdimax);
    xi = log(bhtpa);
-   rd = sdi / sdimax;
+   //rd = sdi / sdimax;
 
    /* Hann and Wang equation 3*/
    myi = a1 + a2 * log(bhtpa);
@@ -124,8 +124,7 @@ void calc_sdi_mortality(
       *return_code = CONIFERS_SUCCESS; /* this is H&W step 3          */
       return;
    }
-   else				
-      /*  then kill trees   */
+   else	/*  then kill trees   */
    {
       tpa_iter = bhtpa * 0.5;
       qq = tpa_iter;		
@@ -134,39 +133,40 @@ void calc_sdi_mortality(
       /* is this the interval bisection method?   */
       for( i = 0; i < 500000; i++ )
       {
-	 qq *= 0.5;
-	 yi = (a1 + a2 * log(tpa_iter)) - (a1 + a2 * x0 - y0) 
-	    * exp( - a3 * (x0 - log(tpa_iter)) );
+         qq *= 0.5;
+         yi = (a1 + a2 * log(tpa_iter)) - (a1 + a2 * x0 - y0) 
+	        * exp( - a3 * (x0 - log(tpa_iter)) );
 
-	 if( yi > log( qmd ) )
-	 {
-	    tpa_iter += qq;
-	 }
-	 else
-	 {
-	    tpa_iter -= qq;
-	 }
+         if( yi > log( qmd ) )
+         {
+	        tpa_iter += qq;
+         }
+         else
+         {
+	        tpa_iter -= qq;
+         }
 
-     /* todo: make sure this can pass mutli-platform precision checks   */ 
-	 //if( fabs( exp( yi ) - qmd ) < 0.0001 )
-	 //if( fabs( exp( yi ) - qmd ) < 0.1 )
-	 //if( fabs( exp( yi ) - qmd ) < 0.0000001 )
-     //2.220446e-16
+         /* todo: make sure this can pass mutli-platform precision checks   */ 
+         //if( fabs( exp( yi ) - qmd ) < 0.0001 )
+         //if( fabs( exp( yi ) - qmd ) < 0.1 )
+         //if( fabs( exp( yi ) - qmd ) < 0.0000001 )
+         //2.220446e-16
 
-     if( fabs( exp( yi ) - qmd ) < 2.220446e-16 )  /* double precision */
-	 //if( fabs( exp( yi ) - qmd ) < 1.192093e-07 )   /* single precision */
-	 {
-	    *mortality_proportion = (double)(1.0 - tpa_iter / bhtpa);
-	    *return_code = CONIFERS_SUCCESS;
-	    return;
-	 }
+         //if( fabs( exp( yi ) - qmd ) < 2.220446e-16 )  /* double precision */
+         if( fabs( exp( yi ) - qmd ) < 1.192093e-07 )   /* single precision */
+         {
+	        *mortality_proportion = (double)(1.0 - tpa_iter / bhtpa);
+	        *return_code = CONIFERS_SUCCESS;
+	        return;
+         }
       }
     
       /*   if you get here we have a problem   */
       *return_code = CONIFERS_ERROR;
       *mortality_proportion = 1.0f;
       return;
-   }
+   } /* end of else-kill trees code */
+
 }
 
 

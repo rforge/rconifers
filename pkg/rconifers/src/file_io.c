@@ -88,10 +88,10 @@
 /*                                                                          */
 /****************************************************************************/
 
-/* 	$Id: file_io.c 853 2012-01-24 02:05:20Z hamannj $	 */
+/* 	$Id: file_io.c 930 2014-01-29 21:48:28Z mritchie $	 */
 
 /* #ifndef lint */
-/* static char vcid[] = "$Id: file_io.c 853 2012-01-24 02:05:20Z hamannj $"; */
+/* static char vcid[] = "$Id: file_io.c 930 2014-01-29 21:48:28Z mritchie $"; */
 /* #endif /\* lint *\/ */
 
 
@@ -1265,12 +1265,12 @@ void __stdcall write_organon_file(
 	FILE	                *fp;
     struct PLANT_RECORD     *plant_ptr;
     unsigned long           i;
-    unsigned long           last_blank;
+    //unsigned long           last_blank;  unused jan 2014 removed mwr
     unsigned long           last_plot;
     unsigned long           empty_plot;
     unsigned long           empty_plot_num;
 
-    last_blank=0;
+    //last_blank=0;
     last_plot=0;
     empty_plot=0;
     empty_plot_num=0;
@@ -1303,7 +1303,7 @@ void __stdcall write_organon_file(
              }
              empty_plot     = 1;
              empty_plot_num = plant_ptr->plot;
-             last_blank     = 1;
+             //last_blank     = 1;  //unused jan 2014 removed mwr
              //last_plot  = plant_ptr->plot;
         }
         else 
@@ -1323,7 +1323,7 @@ void __stdcall write_organon_file(
 			        plant_ptr->expf,
                     plant_ptr->user_code );
 
-             last_blank = 0;
+             //last_blank = 0; //unused jan 2014 removed mwr
              last_plot  = plant_ptr->plot;
              empty_plot = 0;
         }
@@ -1834,7 +1834,7 @@ void read_systum1_archive(
     double              temp_sp[6];
     double              temp_cover[6];
     double              temp_ht[6];
-    unsigned long       check_count;
+    //unsigned long       check_count;     *unused, removed jan 2014 mwr
 
 	/*  temp plant variables */
     double              plot;
@@ -1853,7 +1853,7 @@ void read_systum1_archive(
 	FILE	            *fp;
 
     temp_shrub_count    = 0;
-    check_count         = 0;
+    //check_count         = 0; *unused, removed jan 2014 mwr
 
     if( ( fp = fopen( filename, "rt" ) ) == NULL )
     {
@@ -3183,26 +3183,47 @@ plot sp.code d6 dbh tht cr n.stems expf crown.width
 /* this function prints the plant list variables and the associated errors  */
 /* it needs to be updated.                                                  */
 /* todo: update the function so that it can be more informative             */
-//void print_errors_and_warnings(
-//    unsigned long           n_plants,
-//    struct PLANT_RECORD     *plants_ptr )
-//{
-//
-//
-//    unsigned long           i;
-//    struct PLANT_RECORD     *p;
-//
-//    p = &plants_ptr[0];
-//    for( i = 0; i < n_plants; i++, p++ )
-//    {
-//        fprintf(    stdout, 
-//                    "plant %ld contains %ld errors\n",
-//                    i,
-//                    p->errors );
-//
-//    }
-//   
-//}
+/* right now, it also causes R to throw a warning when trying to build the lib */
+/* void print_errors_and_warnings(
+ */
+/*     unsigned long           n_plants,
+ */
+/*     struct PLANT_RECORD     *plants_ptr )
+ */
+/* {
+ */
+/* 
+ */
+/* 
+ */
+/*     unsigned long           i;
+ */
+/*     struct PLANT_RECORD     *p;
+ */
+/* 
+ */
+/*     p = &plants_ptr[0];
+ */
+/*     for( i = 0; i < n_plants; i++, p++ )
+ */
+/*     {
+ */
+/*         fprintf(    stdout, 
+ */
+/*                     "plant %ld contains %ld errors\n",
+ */
+/*                     i,
+ */
+/*                     p->errors );
+ */
+/* 
+ */
+/*     }
+ */
+/*    
+ */
+/* }
+ */
 
 
 

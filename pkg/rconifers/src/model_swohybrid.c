@@ -36,10 +36,10 @@
 /*                                                                              */
 /*------------------------------------------------------------------------------*/
 
-/* 	$Id: model_swohybrid.c 840 2011-11-22 23:47:23Z hamannj $	 */
+/* 	$Id: model_swohybrid.c 930 2014-01-29 21:48:28Z mritchie $	 */
 
 /* #ifndef lint */
-/* static char vcid[] = "$Id: model_swohybrid.c 840 2011-11-22 23:47:23Z hamannj $"; */
+/* static char vcid[] = "$Id: model_swohybrid.c 930 2014-01-29 21:48:28Z mritchie $"; */
 /* #endif /\* lint *\/ */
 
 
@@ -300,7 +300,7 @@ void swohybrid_impute(
 
   unsigned long   i;
   struct  PLANT_RECORD    *plant_ptr = NULL;
-  struct  PLOT_RECORD     *plot_ptr = NULL;
+  //struct  PLOT_RECORD     *plot_ptr = NULL;  // cruft??? mwr jan 2014;
   struct  COEFFS_RECORD   *c_ptr = NULL;
   unsigned long   error_count = 0;
 
@@ -594,7 +594,8 @@ void swohybrid_impute(
 	  }
 
 	/* set the pointer for the current plot that the plant is on */
-	plot_ptr = get_plot( plant_ptr->plot, n_points, plots_ptr );
+	//plot_ptr = get_plot( plant_ptr->plot, n_points, plots_ptr );
+  // this appears to be cruft removed on jan 2014 mwr;
         
 	/* fill in the percent cover for the plant recor */
 	if( plant_ptr->pct_cover == 0.0)  /* fill in percent cover */
@@ -700,19 +701,19 @@ void swo_hybrid_project_plant(
 {
 
    struct COEFFS_RECORD    *c_ptr;
-   double                  awi;
+   //double                  awi;   // cruft removed jan 2014 by mwr;
 
    /* tree level stats */
-   double  bat_total;
-   double  bat_c;
-   double  bat_h;
-   double  bat_s;
-   double  bat_c_h;
+   //double  bat_total;    // cruft removed jan 2014 by mwr;
+   //double  bat_c;        // cruft removed jan 2014 by mwr;
+   //double  bat_h;        // cruft removed jan 2014 by mwr;
+   //double  bat_s;        // cruft removed jan 2014 by mwr;
+   //double  bat_c_h;      // cruft removed jan 2014 by mwr;
    double  cat_c;
    double  cat_h;
    double  cat_s;
-   double  new_d6_area;
-   double  new_d12_area;
+   //double  new_d6_area;  // cruft removed jan 2014 by mwr;
+   //double  new_d12_area; // cruft removed jan 2014 by mwr;
 
 /*    unsigned long htidx = 0; */
 
@@ -746,23 +747,23 @@ void swo_hybrid_project_plant(
    /* calc diam growth...              */
    /* calc crown recession...          */
    /* calc mortality...                */
-   awi         =   plot_ptr->water_capacity * log( plot_ptr->mean_annual_precip );
-
+   //awi      =   plot_ptr->water_capacity * log( plot_ptr->mean_annual_precip );
+   //  this is cruft, removed by mwr jan 2014;
     get_in_taller_attribs( plant_ptr, 
                             plot_ptr, 
                             bait, 
                             cait );
 
-   bat_c       =   bait[CONIFER];
-   bat_h       =   bait[HARDWOOD];
-   bat_s       =   bait[SHRUB];
+   //bat_c       =   bait[CONIFER];
+   //bat_h       =   bait[HARDWOOD];
+   //bat_s       =   bait[SHRUB];
 
    cat_c       =   cait[CONIFER];
    cat_h       =   cait[HARDWOOD];
    cat_s       =   cait[SHRUB];
 
-   bat_c_h     =   bat_c + bat_h;
-   bat_total   =   bat_c + bat_h + bat_s;
+   //bat_c_h     =   bat_c + bat_h;  // cruft removed jan 2014 mwr;
+   //bat_total   =   bat_c + bat_h + bat_s; // cruft removed jan 2014 mwr;
 
    plant_ptr->tht_growth = 0.0;
    plant_ptr->d6_growth  = 0.0;
@@ -922,8 +923,8 @@ void swo_hybrid_project_plant(
    /* the plant record...  need to calc    */
    /* a temp new d6 area, total height,    */
    /* and crown width                      */
-   new_d6_area = plant_ptr->d6 * plant_ptr->d6 * FC_I;
-   new_d12_area = plant_ptr->d12 * plant_ptr->d12 * FC_I;
+   //new_d6_area = plant_ptr->d6 * plant_ptr->d6 * FC_I;  // cruft mwr;
+   //new_d12_area = plant_ptr->d12 * plant_ptr->d12 * FC_I; // cruft mwr;
    
    
    if( is_tree( c_ptr ) || is_shrub( c_ptr))
@@ -2091,15 +2092,15 @@ void swo_hybrid_calc_d6_growth(
     double  b4;
     double  b5;
     double  b6;
-    double  b7;
-    double  b8;
-    double  b9;
-    double  b10;
-    double  b11;
-    double  b12;
-    double  b13;
-    double  b14;
-    double  b15;
+    //double  b7;
+    //double  b8;
+    //double  b9;
+    //double  b10;
+    //double  b11;
+    //double  b12;
+    //double  b13;
+    //double  b14;
+    //double  b15;
 
     double  c0;
     double  c1;
@@ -2109,8 +2110,8 @@ void swo_hybrid_calc_d6_growth(
 
     double  temp_cat_total;
     double  sum_cat;
-    double  cat_hardwoods_conifers;
-	double  whc;
+    //double  cat_hardwoods_conifers;
+	  double  whc;
 
     /* initialize variables */
     *return_code=CONIFERS_SUCCESS;
@@ -2125,15 +2126,15 @@ void swo_hybrid_calc_d6_growth(
     b4  = 0.0;
     b5  = 0.0;
     b6  = 0.0;
-    b7  = 0.0;
-    b8  = 0.0;
-    b9  = 0.0;
-    b10 = 0.0;
-    b11 = 0.0;
-    b12 = 0.0;
-    b13 = 0.0;
-    b14 = 0.0;
-    b15 = 0.0;
+    //b7  = 0.0;
+    //b8  = 0.0;
+    //b9  = 0.0;
+    //b10 = 0.0;
+    //b11 = 0.0;
+    //b12 = 0.0;
+    //b13 = 0.0;
+    //b14 = 0.0;
+    //b15 = 0.0;
     c0  = 0.0;
     c1  = 0.0;
     c2  = 0.0;
@@ -2142,7 +2143,7 @@ void swo_hybrid_calc_d6_growth(
 
 
     sum_cat                = cat_shrubs + cat_conifers + cat_hardwoods; 
-    cat_hardwoods_conifers = cat_conifers + cat_hardwoods;
+    //cat_hardwoods_conifers = cat_conifers + cat_hardwoods; // unused mwr 1/2014;
 
     if( coeffs_ptr == NULL )
     {
@@ -2157,7 +2158,7 @@ void swo_hybrid_calc_d6_growth(
 		*return_code=INVALID_INPUT_VAL;
 		return;
 	}
-/******************************if predicted height growht is negative set diameter growth to zero************************/
+/******if predicted height growht is negative set diameter growth to zero********/
 	if (height_growth <= 0.0)
 	{
 		*pred_d6_growth = 0.0;
@@ -2179,22 +2180,22 @@ void swo_hybrid_calc_d6_growth(
 	{
 		
 		/* these are from the original SWO model */
-	    b0  = coeffs_ptr[0];
+	  b0  = coeffs_ptr[0];
 		b1  = coeffs_ptr[1];
 		b2  = coeffs_ptr[2];
 		b3  = coeffs_ptr[3];
 		b4  = coeffs_ptr[4];
 		b5  = coeffs_ptr[5];
 		b6  = coeffs_ptr[6];
-		b7  = coeffs_ptr[7];
-		b8  = coeffs_ptr[8];
-		b9  = coeffs_ptr[9];
-		b10 = coeffs_ptr[10];
-		b11 = coeffs_ptr[11];
-		b12 = coeffs_ptr[12];
-		b13 = coeffs_ptr[13];
-		b14 = coeffs_ptr[14];
-		b15 = coeffs_ptr[15];
+		//b7  = coeffs_ptr[7];
+		//b8  = coeffs_ptr[8];
+		//b9  = coeffs_ptr[9];
+		//b10 = coeffs_ptr[10];
+		//b11 = coeffs_ptr[11];
+		//b12 = coeffs_ptr[12];
+		//b13 = coeffs_ptr[13];
+		//b14 = coeffs_ptr[14];
+		//b15 = coeffs_ptr[15];
 /*  this is changed by mwr on  Sept 26, 2011 */
 		dg_trees =   pow(height_growth, b1)
 					*exp(   b0                           
@@ -2210,7 +2211,7 @@ void swo_hybrid_calc_d6_growth(
 	}
 	else if(plant_type == SHRUB || plant_type == FORB)
 	{
-	    c0  = coeffs_ptr[0];
+	  c0  = coeffs_ptr[0];
 		c1  = coeffs_ptr[1];
 		c2  = coeffs_ptr[2];
 		c3  = coeffs_ptr[3];
@@ -2401,8 +2402,8 @@ void swo_hybrid_calc_height_growth(
     double          cahw,
     double          cash,
     double          cathw,
-	double          catsh,
-	double          basal_d,
+	  double          catsh,
+ 	  double          basal_d,
     double          elevation,
     double          random_norm_0_1,
     double          random_unif_0_1a,
@@ -2427,12 +2428,12 @@ void swo_hybrid_calc_height_growth(
     double  a0,  a1,  a2,  a3,  a4,  a5,  a6,  a7,  a8,  a9, a10;
 
 	
-	/* these are for the browse and damage? */
-	double				b10, b11;
+	  /* these are for the browse and damage? */
+	  double				b10, b11;
 
     double  whc;
-	double  height_var;
-	double  height_for_error;
+	  double  height_var;
+	  //double  height_for_error;  // unused commented out jan 2014 mwr
     int     broken;
     int     browsing;
     double  cat;
@@ -2448,7 +2449,7 @@ void swo_hybrid_calc_height_growth(
 	double	SRT;					/* which is what?		*/
 	double	tmod[12];					/* which is what?		*/
 	
-	double	hcb1;
+	//double	hcb1;  // unused removed jan 2014 mwr;
 
 	unsigned long	i;
 
@@ -2484,7 +2485,7 @@ void swo_hybrid_calc_height_growth(
 	   	
 	height_var       = random_norm_0_1;                   /* height growth error by default is N(0,1)    */
 
-	height_for_error = total_height;
+	//height_for_error = total_height;
 
     a0                  = 0.0;
     a1                  = 0.0;
@@ -2543,10 +2544,10 @@ void swo_hybrid_calc_height_growth(
 /*********************  the next stuff will keep random error acting ok. ***********************************/
 /*********************	first we will make sure that we dont get a huge error term, then we  ***************/
 /*********************	will limit the random normal component to between the 10th and 90th percentile******/
-    if(total_height > 15.0 )
-	{
-		height_for_error = 15.0;
-	}
+  //if(total_height > 15.0 )  // I have no idea why jeff had this in here, commented out jan 2014 mwr;
+	//{
+	//	height_for_error = 15.0;
+  //}
 	if(height_var < -1.645)                                         /*  keep random normal within reason     */
 	{
 		height_var = 0.0;                                        /*  if large negative, set to .0       */
@@ -2586,7 +2587,7 @@ void swo_hybrid_calc_height_growth(
 		a7          = coeffs_ptr[7];
 		a8          = coeffs_ptr[8];
 		a9          = coeffs_ptr[9];
-        a10         = coeffs_ptr[10];
+    a10         = coeffs_ptr[10];
 	/* for now, just comment these out */
 	b10 = (double)coeffs_ptr[11] * (double)broken;
 	b11 = (double)coeffs_ptr[12] * (double)browsing;
@@ -2624,7 +2625,7 @@ void swo_hybrid_calc_height_growth(
 	/* input is in inches/year, model version in mm/year	*/	
 	gspcp = precip; 
 
-	hcb1 = total_height * ( 1.0 - crown_ratio );	/* units */
+	// hcb1 = total_height * ( 1.0 - crown_ratio );	/* unused rem jan 2014 mwr */
 
 	/* compute the height growth, in feet. */
 	/* this test returns 437.827, which is probably incorrect.		*/
@@ -2673,7 +2674,7 @@ void swo_hybrid_calc_height_growth(
 		*height_growth=0.0;
 	}
 
-	/******************** this concludes the tree height growth model  ******************************************/
+	/*** this concludes the tree height growth model  ***************************/
     
 	/* if predicted height is <0.5 then        */
 	if( total_height + *height_growth <= 0.5 )                       

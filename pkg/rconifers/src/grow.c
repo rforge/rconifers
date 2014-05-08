@@ -5,7 +5,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-/* 	$Id: grow.c 856 2012-02-21 23:53:56Z hamannj $	 */
+/* 	$Id: grow.c 878 2012-04-04 19:27:41Z hamannj $	 */
 
 #include <math.h>
 #include <memory.h>
@@ -164,6 +164,8 @@ void __stdcall project_plant_list(
 
       if( *return_code != CONIFERS_SUCCESS )
       {
+            /* todo: should set some warning in here */
+            //* warning = WARNING_TYPE;
 	 return;
 	 //continue;
       }
@@ -436,7 +438,6 @@ static void project_plot(
 		
 		/* todo: add the code to project each plant for your variant */
 	    case CONIFERS_CIPS:
-/*
 	      cips_project_plant(return_code,
 			                n_species, 
 			                species_ptr, 
@@ -454,7 +455,7 @@ static void project_plot(
 							plantation_age,
                             n_years_projected ); 
           
-*/
+
         /* todo: put a loop in here and update the dbh using the */
           /* check in project_plant to impute the missing dbh   */
           /* values and make sure you get the end of cycle veg cover    */
@@ -557,5 +558,4 @@ static int compare_plants_by_plot_plant(
 
 
 }
-
 

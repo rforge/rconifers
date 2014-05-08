@@ -7,7 +7,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-/* 	$Id: thin.c 840 2011-11-22 23:47:23Z hamannj $	 */
+/* 	$Id: thin.c 930 2014-01-29 21:48:28Z mritchie $	 */
 
 #include <math.h>
 #include <memory.h>
@@ -164,20 +164,21 @@ void __stdcall thin_plot(
     struct COEFFS_RECORD    *c_ptr;
 
     /*  declare variables  */
-    unsigned long           start_idx;
-    unsigned long           end_idx;
-    unsigned long           n_plant_records_on_plot;
-    double                  thinning_proportion;
+    //unsigned long           start_idx; removed, unused,  by mwr jan 2014
+    //unsigned long           end_idx;   removed, unused,  by mwr jan 2014
+    //unsigned long           n_plant_records_on_plot; rem, unused,  mwr jan 2014
+    //double                  thinning_proportion;rem, unused,  mwr jan 2014
     //double                  plants_removed;
     //double                  ba_removed;
-    double                  total_trees;
+    //double                  total_trees;
 
     /*  MOD001 initialize variables    */
-    start_idx                = 0;   /*  the starting index for current plot */
-    end_idx                  = 0;   /*  the ending index for current plot   */
-    n_plant_records_on_plot  = 0;   /*  number of plant records on plot     */
-    thinning_proportion      = 0.0; /*  the actual ratio to be removed      */   
-    total_trees              = 0.0;  /* total trees per acre on the plot   */
+    // next two variables unused, commented out Jan 2014
+    //start_idx                = 0;   /*  the starting index for current plot */
+    //end_idx                  = 0;   /*  the ending index for current plot   */
+    //n_plant_records_on_plot  = 0;   /*  number of plant records on plot     */
+    //thinning_proportion      = 0.0; /*  the actual ratio to be removed      */
+    //total_trees              = 0.0;  /* total trees per acre on the plot   */
 
     *plants_removed           = 0.0;
     *ba_removed               = 0.0;

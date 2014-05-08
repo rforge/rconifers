@@ -5,7 +5,7 @@
 /*                                                                          */
 /****************************************************************************/
                                                                                 
-/* 	$Id: conifers.h 861 2012-02-22 21:25:32Z hamannj $	 */
+/* 	$Id: conifers.h 880 2012-04-10 22:35:46Z hamannj $	 */
 
 #ifndef __CONIFERS_H__
 #define __CONIFERS_H__
@@ -180,7 +180,6 @@ citation,
 	 unsigned long   idx;        /* this is the functional species code -- group in 2.0 */
 	 unsigned long   type;       /* CONIFER, HARDWOOD, SHRUB, or FORB */
 
-
 	 /* this is required for the user interface */
 	 char           group[SP_LENGTH];               /*  name abbreviated from the usfs  */
 
@@ -200,16 +199,15 @@ citation,
 	 double         biomass[MAX_COEFFS];          /*  S13 biomass coefficients        */
 	 double         cw_growth[MAX_COEFFS];          /*  d6 cw_growth coefficients        */
    
-	 /* coefficients added for the CIPS variant */
-	 /* todo: you need to add the spaces in the older models' coeffs too */
-	 double			dbh_ht_veg_cov[MAX_COEFFS];	
-	 double			d6_ht_veg_cov[MAX_COEFFS];	
-	 double			d12_ht_veg_cov[MAX_COEFFS];
-     double         mortality[MAX_COEFFS];
+
+    /* coefficients added for the CIPS variant */
+    /* todo: you need to added these the old models too */
+    double	        dbh_ht_veg_cov[MAX_COEFFS]; /* dbh-ht prediction            */
+    double	        dob_hi[MAX_COEFFS];         /* dob at height hi             */	
+    double          mortality[MAX_COEFFS];      /* species specific mortality   */
 
 	 /* add new coefficients here */
      /* make sure you include the copy in the variant specific files */
-
    
    };
 
@@ -320,7 +318,7 @@ citation,
 	 double         ca_s;                   /*  crown area in shrubs            */
 	 double         bait[PLANT_TYPES][AIT_SIZE];  /* basal area in taller       */
 	 double         cait[PLANT_TYPES][AIT_SIZE];  /* crown area in taller       */
-/* double         bal[PLANT_TYPES][AIT_SIZE];                                 */
+	 
 
 	 /* variables added for the CONIFERS_CIPS model */
 	 double			d12ba_c;				/* like the d6_area which is the	*/

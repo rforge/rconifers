@@ -1,5 +1,59 @@
 
-/* 	$Id: rconifers.c 862 2012-02-22 21:29:18Z hamannj $	 */
+/* 	$Id: rconifers.c 932 2014-04-30 18:17:59Z mritchie $	 */
+
+/* to build the R package:	*/
+/* open mingwn shell		*/
+/* cd c:\conifers			*/
+/* r cmd check rconfiers	*/
+/* r cmd build rconifers	*/
+/* r cmd binary rconifers	*/
+
+/* To submit to CRAN: */
+/* $ ch to conifers directory */
+/* $ R CMD CHECK rconifers */
+/* $ R CMD BUILD rconifers */
+/* $ ftp cran.r-project.org */
+/* Connected to cran.wu-wien.ac.at. */
+/* 220 Welcome to the CRAN FTP service. */
+/* Name (cran.r-project.org:hamannj): anonymous */
+/* 331 Please specify the password. */
+/* Password:  */
+/* 230-Welcome, CRAN useR! */
+/* 230- */
+/* 230-If you have any unusual problems, */
+/* 230-please report them via e-mail to <cran-sysadmin@statmath.wu-wien.ac.at>. */
+/* 230- */
+/* 230 Login successful. */
+/* Remote system type is UNIX. */
+/* Using binary mode to transfer files. */
+/* ftp> cd incoming */
+/* 250 Directory successfully changed. */
+/* ftp> put rconifers_0.0-9.tar.gz  */
+/* local: rconifers_0.0-9.tar.gz remote: rconifers_0.0-9.tar.gz */
+/* 229 Entering Extended Passive Mode (|||58381|) */
+/* 150 Ok to send data. */
+/* 100% |**************************************************************************************************************| 99741     146.79 MB/s    00:00 ETA */
+/* 226 File receive OK. */
+/* 99741 bytes sent in 00:04 (24.20 KB/s) */
+/* ftp> quit */
+/* 221 Goodbye. */
+/* $  */
+
+// $ svn checkout http://www.forestinformatics.com/conifers
+// $ cd /conifers/trunk
+// Win32:
+// $ RCMD build --no-manual --binary rconifers
+// other
+// $ R CMD build --no-manual --binary rconifers
+
+
+
+/* and send email to cran@r-project.org.  */
+/* Please indicate the copyright situation (GPL, ...) in your submission.  */
+
+
+/* don't forget to run doxygen on the source code as well to generate the software docs */
+/* http://www.digilife.be/quickreferences/QRC/Doxygen%20Quick%20Reference.pdf */
 
 #include <math.h>
 #include <memory.h>
@@ -146,10 +200,9 @@ SEXP r_set_variant( SEXP variant_sexp )
 
    if( variant == CONIFERS_SWO || 
 	   variant == CONIFERS_SMC ||
-	   variant == CONIFERS_SWOHYBRID )
-//	   variant == CONIFERS_SWOHYBRID ||
-//	   variant == CONIFERS_CIPS
-//	   )
+	   variant == CONIFERS_SWOHYBRID ||
+	   variant == CONIFERS_CIPS
+	   )
    {
       /* the coefficients section */
       if( COEFFS_PTR )
@@ -164,8 +217,7 @@ SEXP r_set_variant( SEXP variant_sexp )
    }
    else
    {
-     // Rprintf( "The only variants allowed are: zero (0=CONIFERS_SWO), one (1=CONIFERS_SMC), two (2=CONIFERS_SWOHYBRID), and three (3=CONIFERS_CIPS)\n" );
-        Rprintf( "The only variants allowed are: zero (0=CONIFERS_SWO), one (1=CONIFERS_SMC), and two (2=CONIFERS_SWOHYBRID)\n" );
+      Rprintf( "The only variants allowed are: zero (0=CONIFERS_SWO), one (1=CONIFERS_SMC), two (2=CONIFERS_SWOHYBRID), and three (3=CONIFERS_CIPS)\n" );
       error( "That variant is invalid\n" );
       INTEGER(ans)[0] = 1;
       UNPROTECT(1);
@@ -198,9 +250,9 @@ SEXP r_set_variant( SEXP variant_sexp )
 	 case CONIFERS_SWOHYBRID:
 	    Rprintf( "The code label for the variant is CONIFERS_SWOHYBRID\n" );
 	    break;
-//	 case CONIFERS_CIPS:
-	 //   Rprintf( "The code label for the variant is CONIFERS_CIPS\n" );
-//	    break;
+	 case CONIFERS_CIPS:
+	    Rprintf( "The code label for the variant is CONIFERS_CIPS\n" );
+	    break;
 	 default:
 	    Rprintf( "There is no code label for the variant you supplied\n" );
 	    break;
@@ -239,9 +291,9 @@ char *variant_label( unsigned long variant )
 	 case CONIFERS_SWOHYBRID:
 	    return "CONIFERS_SWOHYBRID";
 	    break;
-//	 case CONIFERS_CIPS:
-//	    return "CONIFERS_CIPS";
-//	    break;
+	 case CONIFERS_CIPS:
+	    return "CONIFERS_CIPS";
+	    break;
 	 default:
 	    return "CONIFERS_SWO";
 	    break;
@@ -437,7 +489,7 @@ SEXP getvar(SEXP name, SEXP rho)
    }
 
    ans = findVar(install(CHAR(STRING_ELT(name, 0))), rho);
-
+ /*ans = getvar(install(CHAR(STRING_ELT(name, 0))), rho);*/
    return(R_NilValue);
 }
 

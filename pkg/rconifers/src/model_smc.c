@@ -5,7 +5,7 @@
 /*                                                                              */
 /********************************************************************************/
 
-/* 	$Id: model_smc.c 840 2011-11-22 23:47:23Z hamannj $	 */
+/* 	$Id: model_smc.c 930 2014-01-29 21:48:28Z mritchie $	 */
 
 //#include <malloc.h>
 #include <math.h>
@@ -231,9 +231,9 @@ void smc_impute(
   double  bait[PLANT_TYPES];
   double  cait[PLANT_TYPES];
 
-  double        cait_c;
-  double        cait_h;
-  double        cait_s;
+  //double        cait_c;   // unused removed jan 2014 mwr;
+  //double        cait_h;   // unused removed jan 2014 mwr;
+  //double        cait_s;   // unused removed jan 2014 mwr;
 
   error_count  = 0;
   *return_code = CONIFERS_SUCCESS;
@@ -540,9 +540,9 @@ void smc_impute(
 		get_in_taller_attribs( plant_ptr, plot_ptr, bait, cait );
             
 
-		cait_c       =   cait[CONIFER];
-		cait_h       =   cait[HARDWOOD];
-		cait_s       =   cait[SHRUB];
+		//cait_c       =   cait[CONIFER];   //unused removed jan 2014 mwr;
+		//cait_h       =   cait[HARDWOOD];  //unused removed jan 2014 mwr;
+		//cait_s       =   cait[SHRUB];     //unused removed jan 2014 mwr;
 		*return_code = CONIFERS_SUCCESS;
 
 		      smc_calc_crown_ratio(return_code,  
@@ -637,14 +637,14 @@ void smc_project_plant(
    struct COEFFS_RECORD    *c_ptr;
 
    /* tree level stats */
-   double  bat_total;
-   double  bat_c;
-   double  bat_h;
-   double  bat_s;
-   double  bat_c_h;
+   //double  bat_total;    //unused removed jan 2014 mwr;
+   //double  bat_c;
+   //double  bat_h;
+   //double  bat_s;
+   //double  bat_c_h;      //unused removed jan 2014 mwr;
    double  cat_c;
-   double  new_d6_area;
-   double  new_d12_area;
+   //double  new_d6_area;  //unused removed jan 2014 mwr;
+   //double  new_d12_area; //unused removed jan 2014 mwr;
 
    unsigned long htidx = 0;
 
@@ -694,17 +694,17 @@ void smc_project_plant(
                             bait,
                             cait );
 
-   bat_c       =   bait[CONIFER];
-   bat_h       =   bait[HARDWOOD];
-   bat_s       =   bait[SHRUB];
+   //bat_c       =   bait[CONIFER];   // unused removed jan 2014 mwr;
+   //bat_h       =   bait[HARDWOOD];  // unused removed jan 2014 mwr;
+   //bat_s       =   bait[SHRUB];     // unused removed jan 2014 mwr;
 
    /* add for new model */
    //cat_c       =   plot_ptr->cait[CONIFER][htidx];
    cat_c       =   cait[CONIFER];
 
 
-   bat_c_h     =   bat_c + bat_h;
-   bat_total   =   bat_c + bat_h + bat_s;
+   //bat_c_h     =   bat_c + bat_h;           // unused removed jan 2014 mwr;
+   //bat_total   =   bat_c + bat_h + bat_s;   // unused removed jan 2014 mwr;
 
    plant_ptr->tht_growth = 0.0;
    plant_ptr->d6_growth  = 0.0;
@@ -834,8 +834,8 @@ void smc_project_plant(
    }
 
 
-   new_d6_area = plant_ptr->d6 * plant_ptr->d6 * FC_I;
-   new_d12_area = plant_ptr->d12 * plant_ptr->d12 * FC_I;
+   //new_d6_area = plant_ptr->d6 * plant_ptr->d6 * FC_I;     // rem 2014;
+   //new_d12_area = plant_ptr->d12 * plant_ptr->d12 * FC_I;  // rem 2014;
 
    if( is_tree( c_ptr ))   /* then call for d6 growth */
    {
@@ -1118,13 +1118,28 @@ void smc_calc_height_growth(
     unsigned long genetics_age_cut)
 {
 
-/****************************  right now, not all are used     ******************************************/
-    double  b0,  b1,  b2,  b3,  b4,  b5,  v1,  v2,  d1,  d2,
-            h0,  h1,  b6, b12, b13, b14, b15;
+/***********  right now, not all are used     ********************************/
+    double  b0;
+    double  b1;
+    double  b2;
+    double  b3;
+    double  b4;
+    double  b5;
+    double  v1;
+    double  v2;
+    double  d1;
+    double  d2;
+    double  h0;
+    double  h1;
+    //double  b6;   //unused removed jan 2014 mwr;
+    double  b12;
+    double  b13;
+    double  b14;
+    double  b15;
 
     double  height_var;
     double  height_for_error;
-    double  total_crown_area;
+    //double  total_crown_area;  // unused removed jan 2014 mwr;
     int     broken;
     int     browsing;
     double  rel_ht;
@@ -1162,12 +1177,12 @@ void smc_calc_height_growth(
     d2                  = 0.0;
     h0                  = 0.0;
     h1                  = 0.0;
-    b6                  = 0.0;
-    b12=0.0;
-    b13=0.0;
-    b14=0.0;
-    b15=0.0;
-    total_crown_area    = 0.0;
+    //b6                  = 0.0;  // Unused removed jan 2014 mwr;
+    b12                 = 0.0;
+    b13                 = 0.0;
+    b14                 = 0.0;
+    b15                 = 0.0;
+    //total_crown_area    = 0.0;  // unused removed jan 2014 mwr;
     broken              = 0;
     browsing            = 0;
     genetic_modifier    = 1.0;
@@ -1298,7 +1313,7 @@ void smc_calc_height_growth(
 		hg = base * rh_mod * veg_mod * tpa_mod * genetic_modifier;
     
     
-	    b12 = coeffs_ptr[12] * (double)browsing;
+	  b12 = coeffs_ptr[12] * (double)browsing;
 		b13 = coeffs_ptr[13] * (double)broken ;                         
 		b14 = coeffs_ptr[14] * height_var;                             
 		b15 = coeffs_ptr[15] * (sqrt(height_for_error) * height_var)/2.0 ; 
@@ -1319,8 +1334,8 @@ void smc_calc_height_growth(
         b0 = coeffs_ptr[0];
         b1 = coeffs_ptr[1];
         b2 = coeffs_ptr[2];
-	    b3 = coeffs_ptr[3];                                   /*          extra                        */
-	    b4 = coeffs_ptr[4];
+	      b3 = coeffs_ptr[3];          /*          extra                        */
+	      b4 = coeffs_ptr[4];
 		
         *height_growth= b0/total_height 
                   + exp(b1 + b2*(log(total_height)) + b3*total_height*basal_d + b4*cat*cat);
@@ -1391,7 +1406,7 @@ void smc_calc_dbh_growth(
     double  tden;
     double  dhrat;
     double  hrat;
-    double  b0;
+    //double  b0; //Unused removed jan 2014 mwr;
     double  b1;
     double  b2;
     double  b3;
@@ -1427,7 +1442,7 @@ void smc_calc_dbh_growth(
         return; 
     }
 
-    b0  = 0.0;
+    //b0  = 0.0;  // unused removed jan 2014 mwr;
     b1  = 0.0;
     b2  = 0.0;
     b3  = 0.0;
@@ -1469,7 +1484,7 @@ void smc_calc_dbh_growth(
 
     temp_dbh    = 0.0;
     
-    b0  = coeffs_ptr[0];
+    //b0  = coeffs_ptr[0];
     b1  = coeffs_ptr[1];
     b2  = coeffs_ptr[2];
     b3  = coeffs_ptr[3];
@@ -1484,12 +1499,12 @@ void smc_calc_dbh_growth(
     e1  = coeffs_ptr[12];    /* this is a correction to force a peaking function beyond the range of dbh */
                              /*  to get this I basically graphically derived a term that would mimic approx. */
                              /*  the peak in Hann et al for dbh growth */
-
+    /* I checked the Vaughn coefficients and all ok Jan 2014 mwr */
     tnum= b1*pow(current_dbh, b2)*exp(b3*current_dbh + b4*basal_area + b5*dhrat + b6*hrat + b7*h40 
                                     + e1*big_i*pow(current_dbh,2.5)) ; /*correction for big trees beyond data */
     tden= 1 + exp(b8 - b9*flew_site);
     temp_dbh= (tnum / tden) * (1 + d1*(h40-d2) * (contpa-300));
-
+      /*  this correction with d1 & d2 is to make inverted density effect */
     if (temp_dbh <= 0.0)
     {
 	    *pred_dbh_growth    = 0.0;
@@ -1674,10 +1689,10 @@ void smc_calc_cw_growth(
 	double  c4;
 	double  c5;
 	double  c6;
-	double  c7;
-	double  c8;
-	double  c9;
-	double  c10;
+	//double  c7;  //unused removed jan 2014;
+	//double  c8;  //unused removed jan 2014;
+	//double  c9;  //unused removed jan 2014;
+	//double  c10; //unused removed jan 2014;
 
 /* this function currently does not have a random damage component but that is */
 /*  what the extra parameters (c7, c8) are for and the uniform_0_1 variable    */
@@ -1725,12 +1740,12 @@ void smc_calc_cw_growth(
 	c4	= coeffs_ptr[4];
 	c5	= coeffs_ptr[5];
 	c6	= coeffs_ptr[6];
-	c7	= coeffs_ptr[7];
-	c8	= coeffs_ptr[8];
-	c9  = coeffs_ptr[9];
-	c10 = coeffs_ptr[10];
+	//c7	= coeffs_ptr[7];  // unused removed jan 2014 mwr;
+	//c8	= coeffs_ptr[8];  // unused removed jan 2014 mwr;
+	//c9  = coeffs_ptr[9];  // unused removed jan 2014 mwr;
+	//c10 = coeffs_ptr[10]; // unused removed jan 2014 mwr;
 
-    if(plant_type == CONIFER || plant_type == HARDWOOD)  /* then use the swo version for trees */
+    if(plant_type == CONIFER || plant_type == HARDWOOD)  /* then use swo version for trees */
     {
 	  temp_cwg = pow(height_growth,c1)
 		    *(c0 
