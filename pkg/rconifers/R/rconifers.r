@@ -1,7 +1,5 @@
 ###
-### Modified by NCrookston from version 1.0.7 downloaded from the CRAN 
-### archives on April 29, 2014. Changes made after that date were made
-### as a USDA Employee and are in the public domain. 
+###	$Id: rconifers.r 929 2013-06-11 21:44:25Z hamannj $	
 ###
 ###            R interface package for conifers growth model
 ###
@@ -23,16 +21,73 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-##.First.lib <-
+
+## To submit to CRAN:
+## $ cd to conifers directory
+## $ R CMD check rconifers
+## if check doesn't pass with flying colors, fix the errors and warnings until it does
+## on unix:
+## $ R CMD build rconifers
+## on windows:
+## $ R CMD INSTALL --build rconifers 
+## $ ftp cran.r-project.org
+## Connected to cran.wu-wien.ac.at.
+## 220 Welcome to the CRAN FTP service.
+## Name (cran.r-project.org:hamannj): anonymous
+## 331 Please specify the password.
+## Password: [hit return - no password needed]
+## 230-Welcome, CRAN useR!
+## 230-
+## 230-If you have any unusual problems,
+## 230-please report them via e-mail to <cran-sysadmin@statmath.wu-wien.ac.at>.
+## 230-
+## 230 Login successful.
+## Remote system type is UNIX.
+## Using binary mode to transfer files.
+## ftp> cd incoming
+## 250 Directory successfully changed.
+## ftp> put rconifers_0.0-9.tar.gz
+## local: rconifers_0.0-9.tar.gz remote: rconifers_0.0-9.tar.gz
+## 229 Entering Extended Passive Mode (|||58381|)
+## 150 Ok to send data.
+## 100% |**************************************************************************************************************| 99741     146.79 MB/s    00:00 ETA
+## 226 File receive OK.
+## 99741 bytes sent in 00:04 (24.20 KB/s)
+## ftp> quit
+## 221 Goodbye.
+## $
+## send this email
+#CRAN Team, 
+#
+#We have updated the rconifers young forest simulator package (i.e. rconifers_version_number.tar.gz). 
+#
+#Thanks,
+#Jeff.
+
+## to cran@r-project.org.
+
+## to do this all at once,
+## $ ftp
+
+
+##.onAttach(libname, pkgname)
+
+
 .onAttach <-
   function(lib, pkg)
 {
-#  library.dynam("rconifers", pkg, lib)
+  ## this package doesn't need any additional package...
+  ## if it did, you'd modify the code below...
+  ## but for now, simply display this little message
+  ## or here?
+
+##  library.dynam("rconifers", pkg, lib)
 
   ## put package checks here...
 ###     if(!require(ts, quietly = TRUE))
 ###         stop("Package ts is needed.  Stopping")
     
+  ##mylib <- dirname(.path.package("rconifers"))
   mylib <- dirname(path.package("rconifers"))
   ver <- packageDescription("rconifers", lib.loc = mylib)["Version"]
 
@@ -52,6 +107,9 @@
           "and data analysis functions using R.\n\n",
           "Jeff D. Hamann, Forest Informatics, Inc.,\n",
           "Martin W. Ritchie, USFS PSW Research Station, Redding Silviculture Lab, and\n",
+          "Doug Maguire, Oregon State University, Corvallis, Oregon\n",
+          "Doug Mainwaring, Oregon State University, Corvallis, Oregon\n\n",
+	    ##"http://www.fsl.orst.edu/cips/index.htm\n",
           ##"Doug Maguire, Oregon State University, Corvallis, Oregon\n\n",
           "See `library (help=rconifers)' for details.\n\n",
           sep = "")
@@ -66,9 +124,27 @@
     stop("Rconifers Error: Package could not be loaded. Could not load default coefficients. Stopping...")
   }
 
+  ## "species.swo"
   
   ## set the species mappings
-  data( species.swo )
+  ##data( species.swo )
+
+  ## sp=NULL
+  ##data( species.swo, package="rconifers", envir=environment() )
+
+## * checking R code for possible problems ... NOTE
+## Found the following calls to data() loading into the global environment:
+## File ‘rconifers/R/rconifers.r’:
+##   data(species.swo)
+## See section ‘Good practice’ in ‘?data’.
+
+ ## 'data(..., envir =
+ ##     environment())'.  However, two alternatives are usually
+ ##     preferable, both described in the 'Writing R Extensions' manual.
+ 
+  data( "species.swo", package="rconifers", envir=environment() )
+  
+  ##.localstuff <- new.env()
   sp.map <- list(idx=species.swo$idx,
                  fsp=species.swo$fsp,
                  code=as.character(species.swo$code),
@@ -78,15 +154,36 @@
                  m=species.swo$mechanical.damage,
                  gwh=species.swo$genetic.worth.h,
                  gwd=species.swo$genetic.worth.d,
-
                  ## all variants will need to include these variables now.
                  mint=species.swo$min.temp,
                  maxt=species.swo$max.temp,
                  optt=species.swo$opt.temp
                  )
 
-  if( !.Call( "r_set_species_map", sp.map, verbose=FALSE,PACKAGE="rconifers" ) ) {
-    stop("Rconifers Error: Package could not be loaded. Could not load swo species map. Stopping...")
+
+  ## sp.map <- list(idx=sp$idx,
+  ##                fsp=sp$fsp,
+  ##                code=as.character(sp$code),
+  ##                em=sp$endemic.mort,
+  ##                msdi=sp$max.sdi,
+  ##                b=sp$browse.damage,
+  ##                m=sp$mechanical.damage,
+  ##                gwh=sp$genetic.worth.h,
+  ##                gwd=sp$genetic.worth.d,
+  ##                ## all variants will need to include these variables now.
+  ##                mint=sp$min.temp,
+  ##                maxt=sp$max.temp,
+  ##                optt=sp$opt.temp
+  ##                )
+
+  ##      .localstuff <- new.env() , verbose=FALSE,PACKAGE="rconifers" ) ) {
+  ## val <- .Call( "r_set_species_map", sp.map, verbose=FALSE, PACKAGE="rconifers" )
+
+
+  
+##  if( !.Call( "r_set_species_map", .localstuff <- new.env() , verbose=FALSE,PACKAGE="rconifers" ) ) {
+  if( !.Call( "r_set_species_map", sp.map,verbose=FALSE, PACKAGE="rconifers" ) ) {
+  stop("Rconifers Error: Package could not be loaded. Could not load swo species map. Stopping...")
   } else {
     introtxt <- paste("\nInitialized species map using data(swo)\nType help.start() for documentation\n", sep = "")
 
@@ -98,10 +195,14 @@
 
   }  
   
+  ## do I register my routines here?
+
 }
 
-.onDetach <- function( lib ) {
+
+.Last.lib <- function( lib ) {
  .Call( "exit_conifers", PACKAGE="rconifers" )
+## library.dynam.unload( "rconifers" , lib)  
 }
 
 
@@ -153,7 +254,6 @@ set.variant <- function( var=0 ).Call( "r_set_variant", var, PACKAGE="rconifers"
 
 ## temp hack to simply list the variants numbers and labels.
 variants <- function() {
-
     ## print( "0=CONIFERS_SWO" )
     ## print( "1=CONIFERS_SMC" )
     ## print( "2=CONIFERS_SWOHYBRID" )
@@ -162,7 +262,7 @@ variants <- function() {
 print( "#define CONIFERS_SWO            0" )
 print( "#define CONIFERS_SMC            1" )
 print( "#define CONIFERS_SWOHYBRID      2" )
-##print( "#define CONIFERS_CIPS           3" )
+print( "#define CONIFERS_CIPS           3" )
     
 }
 
