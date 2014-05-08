@@ -1,20 +1,12 @@
+# Default NAMESPACE created by R
+# Remove the previous line if you edit this file
+
+# Export all names
+exportPattern(".")
+
+# Import all packages listed as Imports or Depends
+import(
+  utils
+)
+
 useDynLib(rconifers)
-export(
-rand.seed,
-set.species.map,
-set.variant,
-variants,
-build.sample.data,
-project,
-thin,
-impute,
-calc.max.sdi,
-print.sample.data,
-summary.sample.data,
-sp.sums,
-plot.sample.data)
-
-S3method(plot, sample.data)
-S3method(summary, sample.data)
-
-

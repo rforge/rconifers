@@ -4,19 +4,25 @@ Please note that only the most significant changes are reported here.
 
 A full ChangeLog is available in the log messages of the SVN repository.
 
-* We have added a new variant to the Rconifers package. 
-
 CHANGES IN VERSION 1.0-8
 
-* This version was modified by NCrookston using CRAN version 1.0.7 downloaded
-on April 29, 2014. 
+* A variant was added (CONIFERS_CIPS), developed by Douglas Maguire and 
+Doug Mainwaring of Oregon State Universty. More information 
+on the CIPS model can be found at http://www.fsl.orst.edu/cips/index.htm
+This brings the number of variants in the CONIFERS project, and 
+accompanying rconifers package, to four (4).
 
-* Fixed errors that caused rconifers to fail CRAN checks. 
+* removed the strset C function in model_cips.c for the new test compilance 
+file output named write_cips_test_file.
 
-* Adjusted authorship to reflect current contributions.
+* replaced beta cips_calc_[d6/d12]_from_veg_cov_and_height with generic 
+taper function named cips_calc_dhi to address ending diameter output issues. 
+Required updates to other variants COEFFS arrays too.
 
-* Made Martin Ritchie the maintainer.
- 
+* In calc_sdi_mort function, the convergence criteria for the bisection-interval
+section in the function, was relaxed to converge for single-precision, not double, 
+which was causing projection failures.
+
 CHANGES IN VERSION 1.0-7
 
 * A variant was added (CONIFERS_SWOHYBRID), developed by Martin Ritchie, of 
@@ -39,9 +45,14 @@ which is ANSI compliant.
 
 * Added compliance with building for R 2.14.0 as all packages now need a namespace. 
 
+
 CHANGES IN VERSION 1.0-6
 
 * This NEWS file was added.
+
+A variant was added (CONIFERS_SWOHYBRID), developed by Martin Ritchie, of 
+USDA FS at PSW Redding, to examine the influence of climate model variables 
+in the CONIFERS_SWO simulator.
 
 * The code for the fill_in_missing values function was modified to better 
 accomodate the multiple variants.
@@ -71,12 +82,12 @@ is only one change in this version. The installation routine is now
 Microsoft Windows enabled. The actual code has not undergone any
 change and results should be the same as the earlier version (4.11).
 
-* The URL below is the site to visit if you want to download version 4.12: 
+* The URL below is the site to visit if you want to download version 4.12:
 
 http://www.fs.fed.us/psw/programs/ecology_of_western_forests/projects/conifers
 
 * please take a look at the log messages of the SVN repository on R-Forge
 
-* $Id: NEWS 866 2012-02-22 21:54:18Z hamannj $	
+#	$Id: NEWS 881 2012-04-10 22:55:09Z hamannj $	
 
 
