@@ -483,7 +483,7 @@ for the SMC variant of CONFERS.
 The CIPS/VMRC variant was made possible by financial support from the Center
 for Intensive Planted-Forest Silviculture (CIPS) and generous contribution of
 data and expertise from Robin Rose, Eric Dinger and Tim Harrington.
-similar to that of the database for the SMC variant of CONIFERS
+The range of data is similar to that of the database for the SMC variant of CONIFERS
 (Figure~\ref{fig:fig.of.v4.data}).
 
 
