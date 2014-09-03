@@ -1,6 +1,6 @@
 Package: rconifers
-Version: 1.0.8
-Date: 2014/01/14
+Version: 1.0.9
+Date: 2014/09/03
 Title: R interface to the CONIFERS forest growth model
 Author: Jeff D. Hamann and
         Martin W. Ritchie <mrtichie@fs.fed.us> and 
