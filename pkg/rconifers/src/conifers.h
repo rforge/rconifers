@@ -44,25 +44,25 @@ extern "C" {
 #define ONE_OVER_PI 0.318309886184      /*                                  */   
 #define DEG2RAD     1.74532925199e-2    /*  degrees to radians              */   
 
-#define FT2CM    30.48000		/*  feet to centimeters                     */
-#define CM2FT    1.0/FT2CM		/*  centimeters to feet		*/
+#define FT2CM     30.48000		        /*  feet to centimeters             */
+#define CM2FT     1.0/FT2CM		        /*  centimeters to feet		        */
 
-#define FT2M     0.304800               /*  feet to meters                  */
-#define GRM2LB   0.0022046226           /*  grams to pounds                 */
-#define KG2LB    2.2046226              /*  kilograms to pounds             */
-#define LB2TON   0.00050                /*  pounds to tons                  */
-#define IN2CM    2.54000				/*  inches to centimeters			*/
-#define IN2MM    25.4000				/*  inches to millimeters           */
-#define MM2IN	  1.0/IN2MM			/*  millimeters to inches               */
-#define FTAC2M2HA 0.229567493114			/* ft^2/acre to m^2/ha			*/
-#define M2HA2FTAC 1.0/FTAC2MHA		/* ft^2/acre to m^2/ha				    */
+#define FT2M      0.304800              /*  feet to meters                  */
+#define GRM2LB    0.0022046226          /*  grams to pounds                 */
+#define KG2LB     2.2046226             /*  kilograms to pounds             */
+#define LB2TON    0.00050               /*  pounds to tons                  */
+#define IN2CM     2.54000				/*  inches to centimeters			*/
+#define IN2MM     25.4000				/*  inches to millimeters           */
+#define MM2IN	  1.0/IN2MM			    /*  millimeters to inches           */
+#define FTAC2M2HA 0.229568411			/* ft^2/acre to m^2/ha	  		    */
+#define M2HA2FTAC 1.0/FTAC2MHA		    /* ft^2/acre to m^2/ha		        */
 
 
 #define REINEKE_B1  1.605               /*  Reineke's constant              */   
 #define REINEKE_B1A 1.77                /*  Modified by Oliver et al.       */   
 #define CRITICAL_RD 0.600               /*  threshold imminent sdi mort     */   
 #define CCF_CONST_I 0.00180302608677    /*  PI / 4.0 / 43560.0 * 100.0      */   
-#define SQ_FT_PER_ACRE      43560.0     /*  Square feet per acre            */   
+#define SQ_FT_PER_ACRE  43560.0         /*  Square feet per acre            */   
 
 /* todo: these varlues need to move into the coeffs */
 //#define CURRENT_COEFFS_VER  4.14        /*  current version num for coeffs  */
@@ -199,7 +199,6 @@ citation,
 	 double         biomass[MAX_COEFFS];          /*  S13 biomass coefficients        */
 	 double         cw_growth[MAX_COEFFS];          /*  d6 cw_growth coefficients        */
    
-
     /* coefficients added for the CIPS variant */
     /* todo: you need to added these the old models too */
     double	        dbh_ht_veg_cov[MAX_COEFFS]; /* dbh-ht prediction            */
@@ -321,13 +320,15 @@ citation,
 	 
 
 	 /* variables added for the CONIFERS_CIPS model */
-	 double			d12ba_c;				/* like the d6_area which is the	*/
-											/* basal area for "conifers"		*/
-											/* (aka DF) at 30 cm (15 inches)	*/
-											/* above the ground					*/
-     
+	 double			    d12ba_c;				/* like the d6_area which is the	*/
+											            /* basal area for "conifers"		*/
+											            /* (aka DF) at 30 cm (15 inches)	*/
+											            /* above the ground					*/
+	 double         bal[PLANT_TYPES][AIT_SIZE];  /* basal area in larger */
+                                               /* diameter trees */
+
 	 /* variables added for the CONIFERS_SWOHYBRID model */
-     double			growing_season_precip;  /* this is not mean annual precip */
+    double			growing_season_precip;  /* this is not mean annual precip */
 	 double			solar_radiation[12];	/*	solar radiation, MegaJoules/m^2	*/
 	 double			mean_monthly_temp[12];	/*	mean monthly temp in C			*/
 
@@ -489,6 +490,12 @@ struct COEFFS_RECORD *con_swo_hybrid_init_coeffs(
       unsigned long			  n_species,
       struct SPECIES_RECORD	  *species_ptr );
 
+   void __stdcall dump_larger_to_file( 
+      unsigned long           *return_code,
+      const char              *filename,
+      unsigned    long        n_points,
+      struct PLOT_RECORD      *plots_ptr );
+
    void __stdcall write_summaries_to_file( 
       unsigned long           *return_code,
       const char              *filename,
@@ -642,8 +649,6 @@ struct COEFFS_RECORD *con_swo_hybrid_init_coeffs(
     void print_errors_and_warnings(
         unsigned long           n_plants,
         struct PLANT_RECORD     *plants_ptr );
-
-
 
 
 /****************************************************************************/
@@ -1097,7 +1102,15 @@ void get_in_taller_attribs(
     double                  *bait,
     double                  *cait );
 
+void set_in_larger_attribs(
+   struct PLANT_RECORD     *plant_ptr,
+    struct COEFFS_RECORD    *c_ptr,
+    struct PLOT_RECORD      *plot_ptr );
 
+void get_in_larger_attribs(
+    struct PLANT_RECORD     *plants_ptr,
+    struct PLOT_RECORD      *plot_ptr,
+    double                  *bal);
 
 
 void __stdcall impute_missing_values( 

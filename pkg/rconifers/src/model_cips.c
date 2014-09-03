@@ -1,5 +1,5 @@
 /****************************************************************************/
-/*                                                                          */
+/* Updated by MWR Augusts 8, 2014                                           */
 /* cips_model.c                                                             */
 /* functions used to predict values for the CONIFERS growth model           */
 /* for the model defined in:                                                */
@@ -7,6 +7,25 @@
 /* Oregon State University                                                  */
 /* Douglas Maguire and Doug Mainwaring.                                     */
 /*                                                                          */
+/*                                                                          */ 
+/*  Functions for cips variant:                                             */ 
+/*    height growth dynamic: cips_calc_height_growth()                      */ 
+/*    dbh growth dynamic:    cips_calc_dbh_growth()                         */ 
+/*    dbh static:            cips_calc_dbh_from_ht_and_veg_cov()            */ 
+/*    ??: cips_calc_dob_hi()                                                */ 
+/*    cw growth dynamic:     cips_calc_cw_growth()                          */ 
+/*    crown ratio static:    cips_calc_crown_ratio()                        */ 
+/*    max cw static:         cips_calc_max_crown_width()                    */ 
+/*    crown width static:    cips_calc_crown_width()                        */ 
+/*    mortality static:      cips_calc_endemic_mortality()                  */ 
+/*                                                                          */ 
+/*                                                                          */ 
+/*                                                                          */ 
+/*                                                                          */ 
+/*                                                                          */ 
+/*                                                                          */ 
+/*                                                                          */ 
+/*                                                                          */ 
 /****************************************************************************/
 
 /*  $Id: model_cips.c 931 2014-04-30 18:13:11Z mritchie $  */
@@ -65,7 +84,7 @@ static void cips_calc_height_growth(
     struct PLOT_RECORD      *plot_ptr,
     struct PLANT_RECORD     *plant_ptr,
     struct COEFFS_RECORD    *c_ptr,
-    double                  h40,    /* plot level variable */
+    double                  h40,
     unsigned long           *n_years_after_planting );
 
 static void cips_calc_dbh_growth(
@@ -73,6 +92,7 @@ static void cips_calc_dbh_growth(
     struct PLOT_RECORD      *plot_ptr,
     struct PLANT_RECORD     *plant_ptr,
     struct COEFFS_RECORD    *coeffs_ptr,
+    double                  bal_c,
     double                  ht40 );
 
 
@@ -305,7 +325,7 @@ void cips_project_plant(
    ///double  cat_c;  //unused, rem jan 2014 mwr;
    //double  new_d6_area; //unused, rem jan 2014 mwr;
    //double  new_d12_area; //unused, rem jan 2014 mwr;
-
+   double   bal_c=0;
     /* variables added for d6_growth and d12_growth */
    double   old_d6;
    double   new_d6;
@@ -329,6 +349,8 @@ void cips_project_plant(
 
    double  bait[PLANT_TYPES];
    double  cait[PLANT_TYPES];
+   double  bal[PLANT_TYPES];
+
 
     
 #ifdef _DEBUG
@@ -382,6 +404,10 @@ void cips_project_plant(
    //bat_c_h     =   bat_c + bat_h; /* ba in taller con and hw (trees) rem jan 2014 mwr */
    //bat_total   =   bat_c + bat_h + bat_s;   /* ba in tallr con_hw_sh rem jan 2014     */
 
+   get_in_larger_attribs( plant_ptr,
+                          plot_ptr,
+                          bal );
+   bal_c            = bal[CONIFER];
 
 	/* the CIPS variant requires the basal area of all plants at D6		*/
 	/* which in this case is only douglas-fir, which is the only		*/
@@ -498,6 +524,7 @@ void cips_project_plant(
                                         plot_ptr,
                                         plant_ptr,
                                         c_ptr,
+                                        bal_c,
                                         h40 );
 
                 plant_ptr->tht += plant_ptr->tht_growth;
@@ -505,6 +532,7 @@ void cips_project_plant(
                 plant_ptr->d12_growth = 0.0;
                 old_d12 = plant_ptr->d12;
                 new_d12 = 0.0;
+                /* compute diameter */
                 cips_calc_dob_hi(  return_code,
                                     plot_ptr,
                                     plant_ptr,
@@ -650,12 +678,8 @@ void cips_project_plant(
                                 plot_ptr,
                                 plant_ptr,
                                 c_ptr,
-
-	                            // from doug's new equation
 	                            plantation_age );
 
-	                            //plot_ptr->d12ba_c,
-                                //plot_ptr->cait );
 
 
         if ( *return_code != CONIFERS_SUCCESS)
@@ -763,18 +787,19 @@ void cips_calc_height_growth(
     unsigned long           *n_years_after_planting )
 {
 
-    double          b1          =   0.0;
-    double          b2          =   0.0;
-    double          b3          =   0.0;
-    double          b4          =   0.0;  
-    double          b5          =   0.0;
+    double          b1                 =   0.0;
+    double          b2                 =   0.0;
+    double          b3                 =   0.0;
+    double          b4                 =   0.0;  
+    double          b5                 =   0.0;
+    double          b6                 =   0.0;
 
-    double          rel_height  =   0.0;
-    double          rh_mod_hg   =   0.0;
-    double          cv_mod_hg   =   0.0;
-    unsigned long   after_first_season = 0; /* for now, just keep this as after the first */
-    double          delta_h_pot =   0.0;
-    double          psi         =   0.0;
+    double          rel_height         =   0.0;
+    double          rh_mod_hg          =   0.0;
+    double          cv_mod_hg          =   0.0;
+    unsigned long   after_first_season =     0; /* for now, just keep this as after the first */
+    double          delta_h_pot        =   0.0;
+    double          psi                =   0.0;
     
     /********** initialize variables ***********/
     *return_code = CONIFERS_SUCCESS;
@@ -820,32 +845,18 @@ void cips_calc_height_growth(
     }
     
 
-    /* set the coefficients for the model  base b0-b5, veg v1 v2, tpa d1 d2, relht h0 and h1 */
+    /* set the coefficients for the model  base b0-b6, veg v1 v2, tpa d1 d2, relht h0 and h1 */
     /****************************************************************************************/
     //if ( c_ptr->plant_type == CONIFER || c_ptr->plant_type == HARDWOOD ) 
     if ( coeff_ptr->type == CONIFER || coeff_ptr->type == HARDWOOD ) 
     {
 
-        /* these are the cofficients that were approved for the first version of the model */
-        //b1 = coeffs_ptr[0]; // = 11.75218;
-        //b2 = coeffs_ptr[1]; // = -1.92283;
-        //b3 = coeffs_ptr[2]; // = -0.0079;
-        //b4 = coeffs_ptr[3]; // = -1.85283;
-        //b5 = coeffs_ptr[4]; // = 1.019159;
-
-        /* these are the cofficients that were approved for the first version of the model */
-        //b1 = coeffs_ptr[0]; // = 13.2604;
-        //b2 = coeffs_ptr[1]; // = -1.5678;
-        //b3 = coeffs_ptr[2]; // = -0.0101;
-        //b4 = coeffs_ptr[3]; // = -1.4203;
-        //b5 = coeffs_ptr[4]; // = 0.1756;
-
-        b1 = coeff_ptr->ht_growth[0]; // = 13.2604;
-        b2 = coeff_ptr->ht_growth[1]; // = -1.5678;
-        b3 = coeff_ptr->ht_growth[2]; // = -0.0101;
-        b4 = coeff_ptr->ht_growth[3]; // = -1.4203;
-        b5 = coeff_ptr->ht_growth[4]; // = 0.1756;
-
+        b1 = coeff_ptr->ht_growth[0]; // = 12.14808;
+        b2 = coeff_ptr->ht_growth[1]; // = -3.19074;
+        b3 = coeff_ptr->ht_growth[2]; // =  0.001047;
+        b4 = coeff_ptr->ht_growth[3]; // = -1.80396;
+        b5 = coeff_ptr->ht_growth[4]; // = -1.91691;
+        b6 = coeff_ptr->ht_growth[5]; // = -0.01265;
 
         /* compute psi first, which is used to compute the  */
         /* potential height growth                          */
@@ -864,78 +875,35 @@ void cips_calc_height_growth(
         /* Convert to centimeters */
         delta_h_pot *= FT2CM;
 
-        /*
-  **************************************************************
-  these are from the spreadsheet - CIPS PAI equations new.xls 
-  **************************************************************
-
-?H = 13.2604 + I*[ ?Hpot *(VegmodH)*(RHmodH)  ]                 
-                
-    I       =   0 if first growing season after planting; 1 otherwise
-    ?Hpot       =   Potential top height growth from Flewelling et al. (2002) under weed-free conditions
-    VegmodH     =   exp[–exp(-1.5678 – 0.0101*H)*Vegcov0.5]
-    RHmodH      =   [ 1 – exp(-1.4203*Hrel0.1756) ]
-
-    where delta H is height growth in cm            
-    where delta Hpot is potential height growth in cm           
-    where H is height in cm at beginning of growing season          
-    where vegcov is summed weed cover in % i.e. 20% weed cover          
-    where Hrel is relative height (ht of subject tree dividedby height of 40 largest per acre)          
-    where I=0 if first growing season after planting; otherwise=1           
-
-    dH          dHpot   ht  vegcov  Hrel            dH (in feet)
-    62.93943054 115     50  20        1           2.064941947
-    84.3091373  115    150  20        1           2.766047812
-==> 99.05186605 115    400  20        1           3.249733138 <==
-    41.5596345  115     50  80        1           1.363505069
-    71.14222625 115    150  80        1           2.334062541
-    97.6556062  115    400  80        1           3.203924088
-*/
 
         /* compute the relative height modifier (eq. 3, page 32) */
         rel_height = (plant_ptr->tht * FT2CM ) / ( h40 * FT2CM );
 
-        /* assign the temp variables for testing */
-        //base_model      = 115.0; 
-        //total_height    = 150.0 * CM2FT;
-        //pct_veg_cov     = 80.0;
-        //rel_height      = 1.0;
                 
         /* compute the competeting vegetation modifier */
-        //cv_mod_hg = exp( -exp( -1.5678 - 0.0101 * ( total_height * FT2CM ) ) * pow( pct_veg_cov, 0.5 ) );
-        //cv_mod_hg = exp( -exp( b2 + b3 * ( total_height * FT2CM ) ) * pow( pct_veg_cov, 0.5 ) );
-        cv_mod_hg = exp( -exp( b2 + b3 * ( plant_ptr->tht * FT2CM ) ) * pow( plot_ptr->shrub_pct_cover, 0.5 ) );
+        cv_mod_hg = exp( -exp( b5 + b6 * ( plant_ptr->tht * FT2CM ) ) * pow( plot_ptr->shrub_pct_cover, 0.5 ) );
 
         /* compute the relative height modifier */
-        //rh_mod_hg = 1.0 - exp( -1.4203 * pow( rel_height, 0.1756 ) );
-        rh_mod_hg = 1.0 - exp( b4 * pow( rel_height, b5 ) );
+        rh_mod_hg = exp( -exp( b2 + b3 * ( plant_ptr->tht * FT2CM ) * pow( rel_height, b4 ) ));
 
         /* compute the final height growth estimate */
         //*height_growth = 13.2604 + after_first_season * ( delta_h_pot * cv_mod_hg * rh_mod_hg );
         //*height_growth = b1 + after_first_season * ( delta_h_pot * cv_mod_hg * rh_mod_hg );
-        plant_ptr->tht_growth = b1 + after_first_season * ( delta_h_pot * cv_mod_hg * rh_mod_hg );
+        plant_ptr->tht_growth = (b1 * (1-after_first_season)) + after_first_season * ( delta_h_pot * cv_mod_hg * rh_mod_hg );
         
         /* and convert back into feet */
-        //*height_growth *= CM2FT;
         plant_ptr->tht_growth *= CM2FT;
     }
     else if (coeff_ptr->type == SHRUB )   
     {
-        //*height_growth = 0.0;
         plant_ptr->tht_growth = 0.0;
     }
     else /* its non stocked or forb */
     {
-        //*height_growth = 0.0;
         plant_ptr->tht_growth = 0.0;
     }
 
-    /* if predicted height is <0.5 then        */
-//    if( total_height + *height_growth <= 0.5 )                       
-//    {
-//        *height_growth = (-1.0)*(total_height-0.51 ) ;
-//    }
-
+    /* if predicted height is <0.5 then make it so that h+hg=0.5    */
     if( plant_ptr->tht + plant_ptr->tht_growth <= 0.5 )                       
     {
         //*height_growth = (-1.0)*(total_height-0.51 ) ;
@@ -978,6 +946,7 @@ void cips_calc_height_growth(
 /*  Arguments   :                                                               */
 /*  unsigned long *return_code      - return code for calling function to check */
 /*  double         total_height     - total tree height                         */
+/*  double         bal_c            - basal area in larger conifers             */
 /*  double         h40              - height of the 40 tallest stems            */
 /*  double         current_dbh      - initial dbh (inches)                      */
 /*  double         *pred_dbh_growth - predicted dbh growth (inches)             */
@@ -998,6 +967,7 @@ static void cips_calc_dbh_growth(
     struct PLOT_RECORD      *plot_ptr,
     struct PLANT_RECORD     *plant_ptr,
     struct COEFFS_RECORD    *coeffs_ptr,
+    double                  bal_c,
     double                  h40 )
 {
 
@@ -1009,10 +979,11 @@ static void cips_calc_dbh_growth(
     double  b6          = 0.0;
     double  b7          = 0.0;
     double  b8          = 0.0;
-    double  b9          = 0.0;
-    double  rel_height  = 0.0; /* relative height = total_height / ht40*/
-    double  rh_mod_dg   = 0.0;  /* equation 6, page 32 */
+//    double  b9          = 0.0;
+//    double  rel_height  = 0.0; 
+    double  cr_mod_dg   = 0.0;  /* equation 6, page 32 */
     double  cv_mod_dg   = 0.0;  /* equation 5, page 32 */
+    double  bal_mod_dg  = 0.0;
 //    double  error_d     = 0.0;
 //    double  site_model  = 0.0;
     double  base_model  = 0.0;
@@ -1032,38 +1003,38 @@ static void cips_calc_dbh_growth(
         return; 
     }
 
-    b1  = coeffs_ptr->dbh_growth[0]; // b1	= 0.00000162;
-    b2  = coeffs_ptr->dbh_growth[1]; // b2  = 0.097185;
-    b3  = coeffs_ptr->dbh_growth[2]; // b3	= -0.00127;
-    b4  = coeffs_ptr->dbh_growth[3]; // b4	= -3.43137;
-    b5  = coeffs_ptr->dbh_growth[4]; // b5	= -0.00069;
-    b6  = coeffs_ptr->dbh_growth[5]; // b6	= -4.84489;
-    b7  = coeffs_ptr->dbh_growth[6]; // b7	= 0.003347;
-    b8  = coeffs_ptr->dbh_growth[7]; // b8	= -4.52113;
-    b9  = coeffs_ptr->dbh_growth[8]; // b9	= 4.644605;
+    b1  = coeffs_ptr -> dbh_growth[0]; // b1	= 0.072151;
+    b2  = coeffs_ptr -> dbh_growth[1]; // b2  = 0.105527;
+    b3  = coeffs_ptr -> dbh_growth[2]; // b3	= -0.00258;
+    b4  = coeffs_ptr -> dbh_growth[3]; // b4	= -2.53834;
+    b5  = coeffs_ptr -> dbh_growth[4]; // b5	= -0.00451;
+    b6  = coeffs_ptr -> dbh_growth[5]; // b6    = 1.221897;
+    b7  = coeffs_ptr -> dbh_growth[6]; // b7    = -0.04529;
+    b8  = coeffs_ptr -> dbh_growth[7]; // b8	= 1.207514;
 
-    rel_height = (plant_ptr->tht * FT2CM ) / ( h40 * FT2CM );
+//    rel_height = (plant_ptr->tht * FT2CM ) / ( h40 * FT2CM );
 
     /* part 1 of the equation */    
-    base_model = b1 * pow( plant_ptr->dbh * IN2MM, b2 ) * 
-            exp( b3 * ( plant_ptr->dbh * IN2MM ) );
+    base_model      = b1 * pow( plant_ptr->dbh * IN2MM, b2 ) * 
+                      exp( b3 * ( plant_ptr->dbh * IN2MM ) );
 
     /* veg cover modifier for the diameter growth model (veg_mod_dg) */
     /* check with mainwaring 3 2014*/
     cv_mod_dg       =   exp( -exp( b4 + b5 * ( plant_ptr->tht * FT2CM ) ) * 
-        pow( plot_ptr->shrub_pct_cover, 0.5f ) );
+                        pow( plot_ptr->shrub_pct_cover, 0.5f ) );
 
     /* relative height growth modifier for the  */
     /* diameter growth model (rh_mod_dg)        */
-    rh_mod_dg       =   exp( -exp( b6 + b7 * ( plant_ptr->tht * FT2CM ) ) * 
-        pow( rel_height, b8 ) );
+    cr_mod_dg       =   exp( b6 * plant_ptr->cr );
+    
+    bal_mod_dg      =   exp( b7 * bal_c * FTAC2M2HA );
 
     /* then compute the predicted dbh growth for the plant  */
     /* updated equation provided by doug mainwaring         */
     /* August 21, 2011                                      */
     /* not right yet at 3.2014 addd basal area*/
-    plant_ptr->dbh_growth =  base_model * cv_mod_dg  * rh_mod_dg  * 
-        pow( ( plot_ptr->site_30 * FT2M ), b9 );  
+    plant_ptr->dbh_growth =  base_model * cv_mod_dg  * bal_mod_dg * cr_mod_dg  * 
+        pow( ( plot_ptr->site_30 * FT2M ), b8 );  
 
     /* convert back into imperial units */
     plant_ptr->dbh_growth *= MM2IN;
@@ -1083,7 +1054,7 @@ static void cips_calc_dbh_growth(
 
     plant_ptr->DBL_SPARE[5]         =   base_model;
     plant_ptr->DBL_SPARE[6]         =   cv_mod_dg;
-    plant_ptr->DBL_SPARE[7]         =   rh_mod_dg;
+//    plant_ptr->DBL_SPARE[7]         =   rh_mod_dg;
 
 #endif
 
@@ -1426,11 +1397,23 @@ static void cips_calc_crown_ratio(
     struct COEFFS_RECORD    *coeffs_ptr )
 {
 
-    double  b0;
-    double  b1;
-    double  newCR;           
+    double  b1   = 0.0;
+    double  b2   = 0.0;
+    double  b3   = 0.0;
+    double  b4   = 0.0;
+    double  hcb  = 0.0;
+    double  hod  = 0.0;
+    double  newCR;
+	double  dfba = 0.0;           
 
     *return_code = CONIFERS_SUCCESS;
+
+    dfba = plot_ptr->ba_c *  FTAC2M2HA; /* convert from sqft per acre to sqm p ha*/
+    if ( plant_ptr->dbh > 0 )
+    {
+    	hod  = ( plant_ptr->tht * FT2CM ) / ( plant_ptr->dbh * IN2MM );
+	}
+
     if( coeffs_ptr == NULL )
     {
         *return_code = INVALID_COEFF;
@@ -1445,11 +1428,14 @@ static void cips_calc_crown_ratio(
         return;
     }
 
-    b0 = coeffs_ptr->crown_ratio[0]; /* -0.00079 */
-    b1 = coeffs_ptr->crown_ratio[1]; /* 0.8935   */
-    
-    newCR = 1.0 - ( 1.0 - exp( b0 * pow( plant_ptr->tht * FT2CM, b1 ) ) );
-
+    b1 = coeffs_ptr->crown_ratio[0]; /*  6.6094     */
+    b2 = coeffs_ptr->crown_ratio[1]; /* -0.000148   */
+    b3 = coeffs_ptr->crown_ratio[2]; /* -1.621      */
+    b4 = coeffs_ptr->crown_ratio[3]; /*  0.1056     */
+ 
+    //newCR = 1.0 - ( 1.0 - exp( b0 * pow( plant_ptr->tht * FT2CM, b1 ) ) );
+    hcb = ( plant_ptr->tht * FT2CM ) / ( 1 + exp(b1 + b2 * plant_ptr->tht * FT2CM + b3 * log(dfba + 0.000001) + b4 * hod) );
+    newCR = 1.0 - hcb / ( plant_ptr->tht * FT2CM );
     if( newCR < 0.0 )
     {
         newCR = 0.0;
@@ -1684,7 +1670,8 @@ static void cips_calc_endemic_mortality(
     double  b3;
     double  prob_of_mortality;
     double  Y;
-    double  rel_height;
+    double  rel_height  = 0.01;  // set to a small value by default
+    double  tree_ht_cm  = 15.24; // set it to minimum height by default
 
     /*  initialize parameters    */
     plant_ptr->expf_change  = 0.0f;
@@ -1696,28 +1683,27 @@ static void cips_calc_endemic_mortality(
         return;
     }
     
-    b0  = coeffs_ptr->mortality[0];  // = -1.3409
-    b1  = coeffs_ptr->mortality[1];  // = -0.00328
-    b2  = coeffs_ptr->mortality[2];  // = 5.0445
-    b3  = coeffs_ptr->mortality[3];  // = 0.1634
+    b0  = coeffs_ptr->mortality[0];  // = -2.8129
+    b1  = coeffs_ptr->mortality[1];  // = -0.4986
+    b2  = coeffs_ptr->mortality[2];  // =  0.9901
+    b3  = coeffs_ptr->mortality[3];  // = -0.6312
 
     if( coeffs_ptr->type == CONIFER )
     {
-        rel_height = ( plant_ptr->tht * FT2CM ) / ( h40 * FT2CM );
-
+    	if( h40 > 0)
+    	{
+        	rel_height = ( plant_ptr->tht * FT2CM ) / ( h40 * FT2CM );
+    	}
+		if( plant_ptr->tht > 0.5)
+		{
+			tree_ht_cm = plant_ptr->tht * FT2CM;
+		}
         /*   this will calculate the number of trees to die using the endemic mortality and current mort if any */
-        /* todo: add switch for when pct_veg_cover == 0.0, log( 0.0 ) = -inf */
-        if( plot_ptr->shrub_pct_cover <= 0.0f )
-        {
-            plot_ptr->shrub_pct_cover = 0.001f;
-        }
-
-        /* used for testing */
         //total_height    = 175.0 * CM2FT;
         //rel_height      = 1.0;
         //pct_veg_cover   = 50.0;
-        Y = b0 + b1 * ( plant_ptr->tht * FT2CM ) + b2 * rel_height + b3 * log( plot_ptr->shrub_pct_cover );
-
+        //Y = b0 + b1 * ( plant_ptr->tht * FT2CM ) + b2 * rel_height + b3 * log( plot_ptr->shrub_pct_cover );
+        Y = b0 + b1 * log( tree_ht_cm ) + b2 * log( rel_height ) + b3 * log( rel_height ) * log( tree_ht_cm );
         prob_of_mortality = exp( Y ) / ( 1.0 + exp( Y ) );    
 
         plant_ptr->expf_change = plant_ptr->expf * prob_of_mortality;
@@ -1799,7 +1785,7 @@ static void cips_calc_cw_growth(
     {
  	    plant_ptr->cw_growth	=   0.0f;
 #ifdef _DEBUG
-    plant_ptr->DBL_SPARE[9]         =   plant_ptr->cw_growth;
+    	plant_ptr->DBL_SPARE[9] =   plant_ptr->cw_growth;
 #endif
 	    *return_code	        =   INVALID_INPUT_VAL;
 	    return;
@@ -1809,7 +1795,7 @@ static void cips_calc_cw_growth(
     {
  	    plant_ptr->cw_growth	=   0.0f;
 #ifdef _DEBUG
-    plant_ptr->DBL_SPARE[9]         =   plant_ptr->cw_growth;
+    	plant_ptr->DBL_SPARE[9] =   plant_ptr->cw_growth;
 #endif
 	    *return_code	        =   INVALID_INPUT_VAL;
 	    return;
@@ -1863,15 +1849,15 @@ static void cips_calc_cw_growth(
 		 //*pred_cw_growth    = 0.10;  
           plant_ptr->cw_growth  = 0.10f;    /* Growth will be set to 0.10 */
 #ifdef _DEBUG
-    plant_ptr->DBL_SPARE[9]         =   plant_ptr->cw_growth;
+    	  plant_ptr->DBL_SPARE[9]         =   plant_ptr->cw_growth;
 #endif
-		 *return_code           = CONIFERS_ERROR;
-		 return;
+		  *return_code           = CONIFERS_ERROR;
+		  return;
 	  }
 
         plant_ptr->cw_growth    = temp_cwg;
 #ifdef _DEBUG
-    plant_ptr->DBL_SPARE[9]         =   plant_ptr->cw_growth;
+    	plant_ptr->DBL_SPARE[9]         =   plant_ptr->cw_growth;
 #endif
 	    *return_code              = CONIFERS_SUCCESS;
 	    return;
@@ -2340,7 +2326,9 @@ void cips_impute(
 
     double  bait[PLANT_TYPES];
     double  cait[PLANT_TYPES];
-
+    double  bal[PLANT_TYPES];
+    
+//    double  bal_c;
     //double        cait_c;  // unused removed mwr jan 2014;
     //double        cait_h;  // unused removed mwr jan 2014;
     //double        cait_s;  // unused removed mwr jan 2014;
@@ -2764,6 +2752,9 @@ void cips_impute(
 		    //cait_s       =   cait[SHRUB];       // unused removed jan 2014 mwr;
 		    *return_code = CONIFERS_SUCCESS;
 
+            get_in_larger_attribs( plant_ptr, plot_ptr, bal);
+//            bal_c         = bal[CONIFER];
+            
 			/* todo: make sure places where variants show up, that the functions are updated */
 			/* not checked */
             cips_calc_crown_ratio(return_code,

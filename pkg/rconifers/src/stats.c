@@ -221,7 +221,8 @@ void calc_plot_stats_2(
 	  /* clean out the old values */
 	  memset( plot_ptr->bait, 0, sizeof( double ) * PLANT_TYPES * AIT_SIZE );
 	  memset( plot_ptr->cait, 0, sizeof( double ) * PLANT_TYPES * AIT_SIZE );
-        
+      memset( plot_ptr->bal,  0, sizeof( double ) * PLANT_TYPES * AIT_SIZE );
+    
 	  /* the plants have to be sorted by plot */
 	  get_plant_indecies_for_plot(  return_code,
 					plot_ptr,
@@ -241,7 +242,8 @@ void calc_plot_stats_2(
 	      /* this is where the set_in_taller_attribs function is called */
         
 	      set_in_taller_attribs( p_ptr, c_ptr, plot_ptr );
-
+          /* added for CIPS variant August 1, 2014 by MWR*/
+          set_in_larger_attribs( p_ptr, c_ptr, plot_ptr );
 
 	      /* take care of the shrub information */
 	      switch( c_ptr->type )
@@ -610,10 +612,10 @@ void update_fsp_summaries(
 	  /*  MOD034 */
 	  if( is_tree( c_ptr ) )
 	    {         
-	      sum_ptr->ccf            +=  CCF_CONST_I *
-		plant_ptr->max_crown_width * 
-		plant_ptr->max_crown_width *
-		plant_ptr->expf;
+	      sum_ptr->ccf            += CCF_CONST_I *
+									 plant_ptr->max_crown_width * 
+									 plant_ptr->max_crown_width *
+									 plant_ptr->expf;
 	      sum_ptr->cr             += plant_ptr->cr * plant_ptr->expf;
 	      sum_ptr->tree_expf      += plant_ptr->expf;
 
@@ -621,19 +623,19 @@ void update_fsp_summaries(
 	      sum_ptr->mean_hd6_ratio  += hdr * plant_ptr->expf;
 
 	      if( hdr > sum_ptr->min_hd6_ratio )
-		{
-		  sum_ptr->max_hd6_ratio = hdr;
-		}
+		  {
+		    sum_ptr->max_hd6_ratio = hdr;
+		  }
 
 	      if( hdr < sum_ptr->min_hd6_ratio )
-		{
-		  sum_ptr->min_hd6_ratio = hdr;
-		}
+		  {
+		    sum_ptr->min_hd6_ratio = hdr;
+		  }
 
 	      if(c_ptr->type == CONIFER)
-		{
-		  sum_ptr->con_tpa += plant_ptr->expf;
-		}
+		  {
+		    sum_ptr->con_tpa += plant_ptr->expf;
+		  }
 	    }
 
 
@@ -1870,6 +1872,55 @@ void get_in_taller_attribs(
 
 }
 
+/********************************************************************************/
+/*   get_in_larger_attribs                                                      */
+/********************************************************************************/
+/*  Description :   function returns the vectors, by plant type for bal         */   
+/*  Author      :   Martin W. Ritchie                                           */
+/*  Date        :   August 1, 2014                                              */
+/*  Returns     :   void                                                        */
+/*  Comments    :   the bins are scaled linearly between zero and  MAX_AIT_THT  */
+/*  Arguments   :                                                               */
+/*  return void                                                                 */
+/*  struct PLANT_RECORD     *plants_ptr a pointer to a plant structure          */
+/*  struct PLOT_RECORD      *plot_ptr,                                          */
+/*  double  bal[PLANT_TYPES][CON_BAT_SIZE];  basal area in larger               */
+/********************************************************************************/
+/*  Formula :                                                                   */
+/*  Source  : NA                                                                */
+/*  Coeffs  :                                                                   */
+/********************************************************************************/
+void get_in_larger_attribs(
+			   struct PLANT_RECORD     *plant_ptr,
+			   struct PLOT_RECORD      *plot_ptr,
+			   double                  *bal )
+{
+
+  unsigned long i;
+  unsigned long htidx;
+
+  /* null out the output vectors */
+  memset( bal, 0, sizeof( double ) * PLANT_TYPES );
+
+  /* get the slope to scale the tht into the array */
+  htidx = (int)( (plant_ptr->dbh) / ((double)AIT_BIN_RES));
+
+  if( htidx < 0 )
+    {
+      htidx = 0;
+    }
+
+  if( htidx >= AIT_SIZE )
+    {
+      htidx = AIT_SIZE - 1;
+    }
+
+  for( i = 0; i < PLANT_TYPES; i++ )
+    {
+      bal[i] = plot_ptr->bal[i][htidx];
+    }
+
+}
 
 
 void set_in_taller_attribs(
@@ -1905,8 +1956,41 @@ void set_in_taller_attribs(
       }
 
 }
+/* this is the code for basal area in larger for CIPS*/
+/* made by MWR August 1, 2014                */
+void set_in_larger_attribs(
+                           struct PLANT_RECORD    *plant_ptr,
+                           struct COEFFS_RECORD   *c_ptr,
+                           struct PLOT_RECORD     *plot_ptr)
+{
+
+  unsigned long k;
+  unsigned long htidx;
+
+  /* compute (fill in) the bal  array */
+  htidx = (int)( (plant_ptr->dbh) / ((double)AIT_BIN_RES));
 
 
+  /* limit the array to a 75 inches feet */
+  if( htidx < 0 )
+    {
+      htidx = 0;
+    }
+
+  if( htidx > AIT_SIZE )
+    {
+      htidx = AIT_SIZE ;
+    }
+
+  /* fill in the "values in taller" array */
+    /* where the basal area in taller values are above 6 inches */
+    for( k = 0; k < htidx; k++ )
+      {
+	    plot_ptr->bal[c_ptr->type][k] += ( plant_ptr->dbh * plant_ptr->dbh * FC_I * plant_ptr->expf );
+      }
+
+
+}
 
 
 /********************************************************************************/

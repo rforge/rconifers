@@ -54,7 +54,8 @@
 /*                              trees > 4.5 and dbh => .1                   */
 /*  MOD026  Dec 03,2001 JDH     fixed save as ((double)elevation in sample  */
 /*  MOD027  Dec 10,2001 MWR     fixed argument list in function             */
-/*  MOD028  Jul 24,2003 MWR    error checking on cr                        */
+/*  MOD028  Jul 24,2003 MWR    error checking on cr                         */
+/*  MOD029  Aug 03,2014 MWR     added dump of larger stuff                  */
 /****************************************************************************/
 
 /****************************************************************************/
@@ -85,6 +86,7 @@
 /*     24. convert_systum_tree_species                                      */
 /*     25. convert_systum_shrub_species                                     */
 /*     26. write_organon_inp                                                */
+/*     27. dump_larger_to_file                                              */
 /*                                                                          */
 /****************************************************************************/
 
@@ -464,7 +466,6 @@ void __stdcall dump_plots_to_file(
     }
 
         fprintf( fp, 
-//            "%4ld %8.2lf %8.2lf %8.2lf %8.2lf %8.2lf %8.2lf %8.2lf %8.2lf %8.2lf %8.2lf %8.2lf\n", 
             "plot, water_capacity, site_30, shrub_pct_cover, shrub_mean_height, basal_area, bh_expf, qmd, sdi, ba_c, ba_h, expf\n" );
 
     plot_ptr = &plots_ptr[0];
@@ -3176,6 +3177,98 @@ plot sp.code d6 dbh tht cr n.stems expf crown.width
 
 }
 
+
+
+/****************************************************************************/
+/* 27. dump_larger_stuff_to_file for testing bal etc.                        */
+/****************************************************************************/
+void __stdcall dump_larger_to_file( 
+    unsigned long       *return_code,
+    const char          *filename,
+    unsigned long       n_points,
+    struct PLOT_RECORD  *plots_ptr )
+{
+
+	FILE	            *fp;
+    struct PLOT_RECORD  *plot_ptr;
+    unsigned long       i;
+
+    if( ( fp = fopen( filename, "wt" ) ) == NULL )
+    {
+        *return_code = INVALID_OPTION;
+        return;
+    }
+
+        fprintf( fp, 
+            "plot" );
+    plot_ptr = &plots_ptr[0];
+    for( i = 0; i < n_points; i++, plot_ptr++ )
+    {
+        fprintf( fp, 
+            "plot\n" );
+        fprintf( fp, 
+            "%4ld, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf\n", 
+            plot_ptr->plot,          
+            plot_ptr->bal[0][0], 
+            plot_ptr->bal[0][1], 
+            plot_ptr->bal[0][2], 
+            plot_ptr->bal[0][3], 
+            plot_ptr->bal[0][4], 
+            plot_ptr->bal[0][5], 
+            plot_ptr->bal[0][6], 
+            plot_ptr->bal[0][7], 
+            plot_ptr->bal[0][8],
+            plot_ptr->bal[0][9] 
+            );
+        fprintf( fp, 
+            "%4ld, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf\n", 
+            plot_ptr->plot,          
+            plot_ptr->bal[0][10], 
+            plot_ptr->bal[0][11], 
+            plot_ptr->bal[0][12], 
+            plot_ptr->bal[0][13], 
+            plot_ptr->bal[0][14], 
+            plot_ptr->bal[0][15], 
+            plot_ptr->bal[0][16], 
+            plot_ptr->bal[0][17], 
+            plot_ptr->bal[0][18],
+            plot_ptr->bal[0][19] 
+            );
+        fprintf( fp, 
+            "%4ld, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf\n", 
+            plot_ptr->plot,          
+            plot_ptr->bal[0][20], 
+            plot_ptr->bal[0][21], 
+            plot_ptr->bal[0][22], 
+            plot_ptr->bal[0][23], 
+            plot_ptr->bal[0][24], 
+            plot_ptr->bal[0][25], 
+            plot_ptr->bal[0][26], 
+            plot_ptr->bal[0][27], 
+            plot_ptr->bal[0][28],
+            plot_ptr->bal[0][29] 
+            );
+        fprintf( fp, 
+            "%4ld, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf, %8.2lf\n", 
+            plot_ptr->plot,          
+            plot_ptr->bal[0][30], 
+            plot_ptr->bal[0][31], 
+            plot_ptr->bal[0][32], 
+            plot_ptr->bal[0][33], 
+            plot_ptr->bal[0][34], 
+            plot_ptr->bal[0][35], 
+            plot_ptr->bal[0][36], 
+            plot_ptr->bal[0][37], 
+            plot_ptr->bal[0][38],
+            plot_ptr->bal[0][39] 
+            );
+
+    }
+
+    fclose( fp );
+    *return_code = CONIFERS_SUCCESS;
+
+}
 
 
 
