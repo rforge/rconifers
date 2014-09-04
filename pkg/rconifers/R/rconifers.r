@@ -1,5 +1,5 @@
 ###
-###	$Id: rconifers.r 929 2013-06-11 21:44:25Z hamannj $	
+###	$Id: rconifers.r  2014-09-04 mritchie $	
 ###
 ###            R interface package for conifers growth model
 ###
@@ -441,25 +441,6 @@ thin <- function( x,
   val
 }
 
-# Function to treat stands competing vegetation provided the sample data and residual vegetation cover target (percent)
-vegman <- function(sample,target){
-	
-	veg = subset(sample$plants,sp.code=="CV") # Isolate just the vegetation entry
-	
-	# Numerically converge on expansion factor yielding desired canopy cover level
-	for(int in c(1000,100,10,1,0.001)) {
-		repeat{
-			cc = with(veg,(3.1416*(crown.width/2)^2*expf)/43560*100) # Calculate current canopy cover
-			if(cc<target) {veg$expf=veg$expf+int; break} # Determine if canopy cover is at the target level
-			veg$expf=veg$expf-int # Subtract vegetation expansion factor by an increasing reduction intension
-		}
-	}
-	
-	sample$plants$expf[sample$plant$sp.code=="CV"] <- veg$expf # Input new expansion factor for vegetation density
-	
-	return(sample) # Return the treated sample information
-}
-
 ## fill in missing values wrapper function
 impute <- function( x,
                    control=list(fpr=11.78,
@@ -681,8 +662,5 @@ plot.sample.data <- function( x, digits = max( 3, getOption("digits") - 1 ),... 
     
     invisible( x )
   }
-
-
-## you might want to put the metric conversion function in the C code and put a wrapper here.
 
 
