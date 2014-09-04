@@ -55,7 +55,7 @@ R package are supported and updated. The current version of the software include
 The original version (SWO) of the project is for growth of mixed-conifer plantations
 in Southern Oregon and Northern California (SWO). The second is a Stand Management Cooperative (SMC) variant for
 northwest Oregon and western Washington, developed using data from research cooperatives.
-Variant 3 is a process/hybrid version of SWO. The final Variant was developed by
+Variant number 3 is a process/hybrid version of SWO. The fourth and at this time final final Variant was developed by
 Doug Maguire and Doug Mainwaring of the Center for Intensive Planted-Forest
 Silviculture (CIPS) at Oregon State University.
 
@@ -199,7 +199,9 @@ data( plants.swo )
 At this point we have set the variant to 0 (\texttt{set.variant(0)}). It may seem confusing that the first Variant is called with
 \texttt{set.variant(0)}. This is a programming issue related to the native language of CONIFERS,
 which is ANSI C. In the C language indexing begins at zero by default. The four CONIFERS Variants
-thus are are indexed then from 0 to 3.
+thus are are indexed then from 0 to 3. To clarify, while there are four variants (numbered 1 to 4), these variants are selected by
+an index that ranges from 0 to 3. Similarly, the second variant {SMC} is indexed by the number 1, so choosing the second variant 
+requires (set.variant=1) in R.The hybrid variant is then index 2, and finally the {CIPS} variant is index 3.
 
 Next, for this example, we are going to modify the data a bit. We have a tree in this file that is a large
 white fir overstory tree that I wish to remove from this run. The big white fir happens to be the third plant in the list.
