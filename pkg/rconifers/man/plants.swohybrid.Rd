@@ -43,8 +43,8 @@ and can be imputed using the \code{\link{impute}} function.}
 
 \references{
 
-Ritchie, M.W. 2008. User's Guide and Help System for CONIFERS: A Simulator for Young Conifer Plantations Version
-4.10. See \url{http://www.fs.fed.us/psw/programs/ecology_of_western_forests/projects/conifers/}
+Ritchie, M.W. 2008. User's Guide and Help System for CONIFERS: A Simulator for Young Conifer 
+Plantations Version 4.10. See \url{http://www.fs.fed.us/psw/programs/ecology_of_western_forests/projects/conifers/}
 
 }
 
@@ -56,12 +56,12 @@ Ritchie, M.W. 2008. User's Guide and Help System for CONIFERS: A Simulator for Y
 \seealso{
   \code{\link{calc.max.sdi}},
   \code{\link{impute}},
-  % \code{\link{plants.cips}},
+  \code{\link{plants.cips}},
   \code{\link{plants.smc}},
   \code{\link{plants.swo}},
   \code{\link{plants.swohybrid}},
   \code{\link{plot.sample.data}},
-  % \code{\link{plots.cips}},
+  \code{\link{plots.cips}},
   \code{\link{plots.smc}},
   \code{\link{plots.swo}},
   \code{\link{plots.swohybrid}},
@@ -72,7 +72,7 @@ Ritchie, M.W. 2008. User's Guide and Help System for CONIFERS: A Simulator for Y
   \code{\link{sample.data}},
   \code{\link{set.species.map}},
   \code{\link{set.variant}},
-  % \code{\link{species.cips}},
+  \code{\link{species.cips}},
   \code{\link{species.smc}},
   \code{\link{species.swo}},
   \code{\link{species.swohybrid}},
