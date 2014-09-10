@@ -39,8 +39,9 @@ following columns for each species:
 
 \references{
 
-Ritchie, M.W. 2008. User's Guide and Help System for CONIFERS: A Simulator for Young Conifer Plantations Version
-4.10. See \url{http://www.fs.fed.us/psw/programs/ecology_of_western_forests/projects/conifers/}
+Ritchie, M.W. 2008. User's Guide and Help System for CONIFERS: A Simulator for Young Conifer 
+Plantations Version 4.10. 
+See \url{http://www.fs.fed.us/psw/programs/ecology_of_western_forests/projects/conifers/}
 
 }
 
@@ -203,7 +204,9 @@ hist( sample.swo.23$plants$tht, main="Height Distribution" )
 ba <- sp.sums(sample.swo.23)$ba
 names(ba) <- rownames( sp.sums(sample.swo.23) )
 pie( ba[ba>0], main="Basal Area" )
-plot( sample.swo.23$plants$tht ~ sample.swo.23$plants$dbh, ylim=c(0,220), xlim=c(0,40), main="Height vs. Basal Diameter" )
+plot( sample.swo.23$plants$tht ~ sample.swo.23$plants$dbh, ylim=c(0,220), 
+                                                           xlim=c(0,40), 
+                                                           main="Height vs. Basal Diameter" )
 
 par(opar)
 
