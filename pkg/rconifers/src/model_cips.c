@@ -1746,8 +1746,8 @@ static void cips_calc_cw_growth(
     unsigned long           plantation_age )
 {
 
-    double  initial_pct_cov;
-    double  temp_cover_growth;
+    double  initial_pct_cov = 0.0;
+    double  temp_cover_growth = 0.0;
 
 	double  temp_cover;
 	double  temp_cwg;
@@ -1766,6 +1766,9 @@ static void cips_calc_cw_growth(
     double  ca_conifers;
 	double  ca_hardwoods;
 	double  ca_shrubs;
+
+// adding site index to the mix mwr november 2014;
+    double  si30;
 
 	*return_code	= CONIFERS_SUCCESS;
 
@@ -1810,7 +1813,11 @@ static void cips_calc_cw_growth(
 	    *return_code	        = CONIFERS_SUCCESS;
 	    return;
     }
+//create variables for the cv growth;
 
+    si30 = plot_ptr->site_30;
+    dfba30 = plot_ptr->d12ba_c;
+    
     temp_cwg    = 0.0f;
 
     /* then use the smc version for trees       */
