@@ -276,8 +276,8 @@ citation,
 	 double         d12_area;		 /* area (ft^2) of d12 cross section */
 
 	 /* spares. these are reserved for debugging, new variables, etc.    */
-	 long           INT_SPARE[40];   /*  generic spares, reserved        */
-	 double         DBL_SPARE[40];	 /*  for debugging variants          */
+	 long           INT_SPARE[30];   /*  generic spares, reserved        */
+	 double         DBL_SPARE[30];	 /*  for debugging variants          */
 
    };
 
@@ -320,21 +320,21 @@ citation,
 	 
 
 	 /* variables added for the CONIFERS_CIPS model */
-	 double			    d12ba_c;				/* like the d6_area which is the	*/
-											            /* basal area for "conifers"		*/
-											            /* (aka DF) at 30 cm (15 inches)	*/
-											            /* above the ground					*/
+	 double			d12ba_c;				/* like the d6_area which is the	*/
+											/* basal area for "conifers"		*/
+											/* (aka DF) at 30 cm (15 inches)	*/
+											/* above the ground					*/
 	 double         bal[PLANT_TYPES][AIT_SIZE];  /* basal area in larger */
-                                               /* diameter trees */
+                                                 /* diameter trees */
 
 	 /* variables added for the CONIFERS_SWOHYBRID model */
-    double			growing_season_precip;  /* this is not mean annual precip */
+     double			growing_season_precip;  /* this is not mean annual precip */
 	 double			solar_radiation[12];	/*	solar radiation, MegaJoules/m^2	*/
 	 double			mean_monthly_temp[12];	/*	mean monthly temp in C			*/
 
 	 /* spares. these are reserved for debugging, new variables, etc.    */
-	 long           INT_SPARE[40];   /*  generic spares, reserved        */
-	 double         DBL_SPARE[40];	 /*  for debugging variants          */
+	 long           INT_SPARE[30];   /*  generic spares, reserved        */
+	 double         DBL_SPARE[30];	 /*  for debugging variants          */
 
    };
 
@@ -378,8 +378,8 @@ citation,
 	 double         con_tpa;                /*  conifers trees per acre         */
 
      /* spares   */
-	 long           INT_SPARE[40];          /*  generic spares, reserved        */
-	 double         DBL_SPARE[40];          /*  generic spares, reserved        */
+	 long           INT_SPARE[30];          /*  generic spares, reserved        */
+	 double         DBL_SPARE[30];          /*  generic spares, reserved        */
 
 
    };
