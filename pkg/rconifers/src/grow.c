@@ -39,6 +39,7 @@ void __stdcall project_plant_list(
       unsigned long		      variant,
    unsigned long            use_genetic_gains,
    unsigned long			plantation_age,
+   unsigned long            yrst,
    unsigned long            *n_years_after_planting );
 
 
@@ -59,6 +60,7 @@ static void project_plot(
    struct SUMMARY_RECORD   *before_sums,
    unsigned long           use_genetic_gains,
    unsigned long			plantation_age,
+   unsigned long            yrst,
    unsigned long            *n_years_after_planting );
 
 
@@ -87,6 +89,7 @@ void __stdcall project_plant_list(
    unsigned long	        variant,
    unsigned long            use_genetic_gains,
    unsigned long			plantation_age,
+   unsigned long            yrst,
    unsigned long            *n_years_after_planting )
 {
    unsigned long           i;
@@ -160,6 +163,7 @@ void __stdcall project_plant_list(
                       &before_sums,
                       use_genetic_gains,
 	                  plantation_age,
+	                  yrst,
                       n_years_after_planting );
 
       if( *return_code != CONIFERS_SUCCESS )
@@ -346,6 +350,7 @@ static void project_plot(
    struct SUMMARY_RECORD   *before_sums,
    unsigned long           use_genetic_gains,
    unsigned long			plantation_age,
+   unsigned long            yrst,
    unsigned long            *n_years_projected )
 {
 
@@ -453,6 +458,7 @@ static void project_plot(
                             use_genetic_gains,
                             genetics_age_cut,
 							plantation_age,
+							yrst,
                             n_years_projected ); 
           
 
