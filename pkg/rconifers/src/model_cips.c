@@ -132,7 +132,8 @@ static void cips_calc_cw_growth(
     struct PLOT_RECORD      *plot_ptr,
     struct PLANT_RECORD     *plant_ptr,
     struct COEFFS_RECORD    *coeffs_ptr,
-    unsigned long           plantation_age );
+    unsigned long           plantation_age,
+	unsigned long           yrst );
 
 // todo: these will need to be moved into the plot record
 //    double                  conifer_d12_basal_area, -- these are at the plot level */
@@ -311,6 +312,7 @@ void cips_project_plant(
    unsigned long           use_genetic_gains,
    unsigned long           genetics_age_cut,
    unsigned long			plantation_age,
+   unsigned long            yrst,
    unsigned long            *n_years_projected )
 {
 
@@ -678,7 +680,8 @@ void cips_project_plant(
                                 plot_ptr,
                                 plant_ptr,
                                 c_ptr,
-	                            plantation_age );
+	                            plantation_age,
+								yrst );
 
 
 
@@ -1743,7 +1746,8 @@ static void cips_calc_cw_growth(
     struct PLOT_RECORD      *plot_ptr,
     struct PLANT_RECORD     *plant_ptr,
     struct COEFFS_RECORD    *coeffs_ptr,
-    unsigned long           plantation_age )
+    unsigned long           plantation_age,
+	unsigned long           yrst, )
 {
 
     double  initial_pct_cov = 0.0;
@@ -1767,7 +1771,8 @@ static void cips_calc_cw_growth(
 	double  ca_hardwoods;
 	double  ca_shrubs;
 
-// adding site index to the mix mwr november 2014;
+// adding site index and basal area to the mix mwr november 2014;
+    double  dfba30;
     double  si30;
 
 	*return_code	= CONIFERS_SUCCESS;
@@ -1815,7 +1820,7 @@ static void cips_calc_cw_growth(
     }
 //create variables for the cv growth;
 
-    si30 = plot_ptr->site_30;
+    si30   = plot_ptr->site_30;
     dfba30 = plot_ptr->d12ba_c;
     
     temp_cwg    = 0.0f;
