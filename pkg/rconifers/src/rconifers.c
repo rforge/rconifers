@@ -630,6 +630,7 @@ SEXP r_project_sample(
 			    current_variant,
 			    use_genetic_gains,
 				age,
+				yrst,
                 &n_years_projected );
 
     /*
