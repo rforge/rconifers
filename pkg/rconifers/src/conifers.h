@@ -674,6 +674,7 @@ void __stdcall project_plant_list(
       unsigned long		      variant,
    unsigned long            use_genetic_gains,
    unsigned long			plantation_age,
+   unsigned long            yrst,
    unsigned long            *n_years_projected );
 
 void get_taller_attribs( 
@@ -789,6 +790,7 @@ void cips_project_plant(
    unsigned long            use_genetic_gains,
    unsigned long            genetics_age_cut,
    unsigned long			plantation_age,
+   unsigned long            yrst,
    unsigned long            *n_years_projected );
 
 
