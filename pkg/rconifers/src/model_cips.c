@@ -1747,7 +1747,7 @@ static void cips_calc_cw_growth(
     struct PLANT_RECORD     *plant_ptr,
     struct COEFFS_RECORD    *coeffs_ptr,
     unsigned long           plantation_age,
-	unsigned long           yrst, )
+	unsigned long           yrst )
 {
 
     double  initial_pct_cov = 0.0;
