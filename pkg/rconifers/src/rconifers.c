@@ -119,6 +119,7 @@ SEXP build_sexp_from_plant_array( unsigned long n_plants,
 
 SEXP build_return_data_sexp( double x0,
 			     unsigned long age,
+			     unsigned long yrst,
 			     unsigned long n_years_projected,
 
 			     unsigned long n_plots,
@@ -520,6 +521,7 @@ SEXP r_project_sample(
    unsigned long hcb_growth_on = 1;
    double x0;
    unsigned long age = 0;
+   unsigned long yrst = 0;
    unsigned long n_years_projected = 0;
 
 
@@ -534,6 +536,7 @@ SEXP r_project_sample(
    /* get the stand level variables */
    x0 = asReal( get_list_element( data_sexp, "x0" ) );
    age = asInteger( get_list_element( data_sexp, "age" ) );
+   yrst = asInteger( get_list_element( data_sexp, "yrst"));
    n_years_projected = asInteger( get_list_element( data_sexp, "n.years.projected" ) );
 
    if( x0 < 0.0 )
@@ -576,6 +579,7 @@ SEXP r_project_sample(
 	       Rprintf( "Invalid plots for variant %ld. Check site index values\n", current_variant );
 	       ret_val = build_return_data_sexp( x0,
 						 age,
+						 yrst,
                          n_years_projected,
 						 n_plots, plots_ptr, 
 						 n_plants, plants_ptr  );  
@@ -663,6 +667,7 @@ void __stdcall project_plant_list(
 	   Rprintf( "unable to project, return_code = %ld, %lf, check conifers.h for list of return codes\n", return_code, x0 );
 	   ret_val = build_return_data_sexp( x0,
 					     age,
+					     yrst,
                          n_years_projected,
 					     n_plots, plots_ptr, 
 					     n_plants, plants_ptr  );  
@@ -677,6 +682,7 @@ void __stdcall project_plant_list(
 	
 
 	age++;
+	yrst++;
    }
 
 
@@ -685,6 +691,7 @@ void __stdcall project_plant_list(
 /*   Rprintf( "building return data sexp..." ); */
   ret_val = build_return_data_sexp( x0,
 				    age,
+				    yrst,
                     n_years_projected,
 				    n_plots, plots_ptr, 
 				    n_plants, plants_ptr  );  
@@ -704,6 +711,7 @@ void __stdcall project_plant_list(
 /* this function seems to be working as intended */
 SEXP build_return_data_sexp( double x0,
 			     unsigned long age,
+			     unsigned long yrst,
 			     unsigned long n_years_projected,
 			     unsigned long n_plots,
 			     struct PLOT_RECORD *plots_ptr,
@@ -717,21 +725,22 @@ SEXP build_return_data_sexp( double x0,
    SEXP sexp_plants;
 
    /* this protects one more than the vector itself */
-   PROTECT( ret_val = allocVector( VECSXP, 5 ) );
+   PROTECT( ret_val = allocVector( VECSXP, 6 ) );
 
 /*    Rprintf( "value of x0 = %lf\n", x0 ); */
    SET_VECTOR_ELT( ret_val, 0, ScalarReal( x0 ) );
    SET_VECTOR_ELT( ret_val, 1, ScalarInteger( age ) );
+   SET_VECTOR_ELT( ret_val, 2, ScalarInteger(yrst));
 
    PROTECT( sexp_plots =  build_sexp_from_plot_array( n_plots, plots_ptr ) );
-   SET_VECTOR_ELT( ret_val, 2, sexp_plots );
+   SET_VECTOR_ELT( ret_val, 3, sexp_plots );
 
    PROTECT( sexp_plants =  build_sexp_from_plant_array( n_plants, plants_ptr ) );
-   SET_VECTOR_ELT( ret_val, 3, sexp_plants );
+   SET_VECTOR_ELT( ret_val, 4, sexp_plants );
 
-   SET_VECTOR_ELT( ret_val, 4, ScalarInteger( n_years_projected ) );
+   SET_VECTOR_ELT( ret_val, 5, ScalarInteger( n_years_projected ) );
 
-   UNPROTECT( 4 );
+   UNPROTECT( 5 );
    return ret_val;
    
 }
@@ -1414,6 +1423,7 @@ SEXP r_thin_sample(
 
    double x0;
    unsigned long age;
+   unsigned long yrst;
    unsigned long n_years_projected;
    unsigned long n_plants;
    struct PLANT_RECORD *plants_ptr;
@@ -1442,6 +1452,7 @@ SEXP r_thin_sample(
 
    x0 = asReal( get_list_element( data_sexp, "x0" ) );
    age = asInteger( get_list_element( data_sexp, "age" ) );
+   yrst= asInteger( get_list_element( data_sexp, "yrst"));
    n_years_projected = asInteger( get_list_element( data_sexp, "n.years.projected" ) );
 
    plots_ptr = build_plot_array_from_sexp( 
@@ -1481,9 +1492,12 @@ SEXP r_thin_sample(
 	    Rprintf( "Make sure you have the entry in your species map. See help\n" );
 	    ret_val = build_return_data_sexp( x0,
 					      age,
+					      yrst,
                           n_years_projected,
-					      n_plots, plots_ptr, 
-					      n_plants, plants_ptr  );  
+					      n_plots, 
+						  plots_ptr, 
+					      n_plants, 
+						  plants_ptr  );  
 	    
 	    free( plots_ptr );
 	    free( plants_ptr );
@@ -1563,9 +1577,12 @@ SEXP r_thin_sample(
 /*   Rprintf( "building return data sexp..." ); */
   ret_val = build_return_data_sexp( x0, 
 				    age,
+				    yrst,
                     n_years_projected,
-				    n_plots, plots_ptr, 
-				    n_plants, plants_ptr  );  
+				    n_plots, 
+					plots_ptr, 
+				    n_plants, 
+					plants_ptr  );  
 /*   Rprintf( "done\n" ); */
 
    free( plots_ptr );
@@ -1587,6 +1604,7 @@ SEXP r_impute_missing_values(
 /* data variables */
    double x0;
    unsigned long age                = 0;
+   unsigned long yrst               = 0;
    unsigned long n_years_projected  = 0;
 
    unsigned long n_plots;
@@ -1610,6 +1628,7 @@ SEXP r_impute_missing_values(
 /* set the data variables */
    x0 = asReal( get_list_element( data_sexp, "x0" ) );
    age = asInteger( get_list_element( data_sexp, "age" ) );
+   yrst = asInteger(get_list_element( data_sexp, "yrst"));
    n_years_projected = asInteger( get_list_element( data_sexp, "n.years.projected" ) );
 
    plots_ptr = build_plot_array_from_sexp( 
@@ -1662,9 +1681,12 @@ SEXP r_impute_missing_values(
 
   ret_val = build_return_data_sexp( x0, 
 				    age,
+				    yrst,
                     n_years_projected,
-				    n_plots, plots_ptr, 
-				    n_plants, plants_ptr  );  
+				    n_plots, 
+					plots_ptr, 
+				    n_plants, 
+					plants_ptr  );  
 /*   Rprintf( "done\n" ); */
 
    free( plots_ptr );
