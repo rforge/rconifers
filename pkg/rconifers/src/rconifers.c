@@ -730,15 +730,15 @@ SEXP build_return_data_sexp( double x0,
 /*    Rprintf( "value of x0 = %lf\n", x0 ); */
    SET_VECTOR_ELT( ret_val, 0, ScalarReal( x0 ) );
    SET_VECTOR_ELT( ret_val, 1, ScalarInteger( age ) );
-   SET_VECTOR_ELT( ret_val, 2, ScalarInteger(yrst));
 
    PROTECT( sexp_plots =  build_sexp_from_plot_array( n_plots, plots_ptr ) );
-   SET_VECTOR_ELT( ret_val, 3, sexp_plots );
+   SET_VECTOR_ELT( ret_val, 2, sexp_plots );
 
    PROTECT( sexp_plants =  build_sexp_from_plant_array( n_plants, plants_ptr ) );
-   SET_VECTOR_ELT( ret_val, 4, sexp_plants );
+   SET_VECTOR_ELT( ret_val, 3, sexp_plants );
 
-   SET_VECTOR_ELT( ret_val, 5, ScalarInteger( n_years_projected ) );
+   SET_VECTOR_ELT( ret_val, 4, ScalarInteger( n_years_projected ) );
+   SET_VECTOR_ELT( ret_val, 5, ScalarInteger(yrst));
 
    UNPROTECT( 5 );
    return ret_val;
