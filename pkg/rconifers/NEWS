@@ -4,6 +4,18 @@ Please note that only the most significant changes are reported here.
 
 A full ChangeLog is available in the log messages of the SVN repository.
 
+CHANGES IN VERSION 1.1-0
+
+* Made substatial changes to the rconifers interface correcting problems with
+the functions to build sample data files. 
+
+* Added yrst (years since treatment of competing vegetation) to the interface and
+C code. This is a necessary variable for the CIPS variant but not used by other 
+variants at this time.
+
+--mwr 12/4/2014
+
+
 CHANGES IN VERSION 1.0-9
 
 * Modified coefficients and models for the CIPS variant per Mainwarings new fits,
@@ -13,6 +25,9 @@ did not include changes to veg growth yet.
 but none of this should affect the functioning of the model.
 
 * Model is now maintained on R-Forge.
+
+--mwr 9/3/2014
+
 
 CHANGES IN VERSION 1.0-8
 
