@@ -479,7 +479,6 @@ sp.sums <- function( x ) {
   df
 }
 
-
 ## To Do!: This needs a manual page
 # This function generates a simple set of charts to visually represent the data
 plot.sample.data <- function( x, digits = max( 3, getOption("digits") - 1 ),... ) {
@@ -534,4 +533,22 @@ plot.sample.data <- function( x, digits = max( 3, getOption("digits") - 1 ),... 
     invisible( x )
 }
 
+# Function to treat stands competing vegetation provided the sample data and residual vegetation cover target (percent)
+vegman <- function(sample,target){
+	
+	veg = subset(sample$plants,sp.code=="CV") # Isolate just the vegetation entry
+	
+	# Numerically converge on expansion factor yielding desired canopy cover level
+	for(int in c(1000,100,10,1,0.001)) {
+		repeat{
+			cc = with(veg,(3.1416*(crown.width/2)^2*expf)/43560*100) # Calculate current canopy cover
+			if(cc<target) {veg$expf=veg$expf+int; break} # Determine if canopy cover is at the target level
+			veg$expf=veg$expf-int # Subtract vegetation expansion factor by an increasing reduction intension
+		}
+	}
+	
+	sample$plants$expf[sample$plant$sp.code=="CV"] <- veg$expf # Input new expansion factor for vegetation density
+	
+	return(sample) # Return the treated sample information
+}
 
