@@ -172,74 +172,6 @@ static int compare_plants_by_plot_plant(
 
 
 
-/****************************************************************************/
-/* local function definitions                                               */
-/****************************************************************************/
-
-
-
-/* the variables - or some of them
-where   D   =   Dbh (mm)
-    D15 =   Diameter at 15 cm above ground (mm)
-    D30 =   Diameter at 30 cm above ground (mm)
-    H   =   Height (cm)
-    h   =   Arbitrary height on stem with 0=h=H
-    Hrel    =   H/H100
-    H100    =   Mean height of 100 largest trees per hectare (cm)
-    Vegcov  =   Competing vegetation cover (%)
-    PAGE    =   Plantation age (years)
-    VGAP    =   100 - initial Vegcov
-    BADF    =   Initial Douglas-fir basal area at 30 cm from ground (m2/ha)
-
-*/
-
-/* these are the functions you have already written */
-//cips_calc_height_growth - eq. 1, page 32
-//cips_calc_dbh_growth - eq 4, page 32.
-//cips_calc_dbh_from_ht_and_veg_cov - eq 3, page 42
-//cips_calc_d6_from_ht_and_veg_cov - where did this come from?
-//cips_calc_d12_from_ht_and_veg_cov - where did this come from?
-//cips_calc_endemic_mortality - eq. 2, page 38
-
-
-/****************************************************************************/
-/* cips_project_plant                                                       */
-/****************************************************************************/
-/*  Description :   computes plant growth components for CIPS variant		*/
-/*  Author      :   Jeff D. Hamann                                          */
-/*  Date        :   July 01, 2011											*/
-/*  Returns     :   void                                                    */
-/*  Comments    :   updated values are height_growth, d6_growth, dbh_growth,*/
-/*                  crown_ratio_growth, crown_width_growth, and             */
-/*                  max_crown_width                                         */
-/*  Arguments   :   unsigned long *return_code  - pointer to a return code  */
-/*                  unsigned long n_plants - total number fo plants in the  */
-/*                      plants pointer array                                */
-/*                  struct PLANT_RECORD *plants_ptr - array of plants in the*/
-/*                      sample to be projected                              */
-/*                  struct PLOT_RECORD  *plot_ptr   - pointer to the current*/
-/*                      plot that is to be grown                            */
-/*                  unsigned long n_species - size of the species_ptr       */
-/*                  struct SPECIES_RECORD   *species_ptr - array of         */
-/*                      SPECIES_RECORD's that hold species specific info    */
-/*                  unsigned long   n_coeffs - sizes of the coeffs_ptr array*/
-/*                  struct COEFFS_RECORD *coeffs_ptr - array of coefficients*/
-/*                      that are used to project the individual plants on   */
-/*                      plot.                                               */
-/****************************************************************************/
-
-/* this function needs to update the following values	*/
-/* update the current tree values...					*/
-//plant_ptr->d6           += plant_ptr->d6_growth;
-//plant_ptr->dbh          += plant_ptr->dbh_growth;
-//plant_ptr->tht          += plant_ptr->tht_growth;
-//plant_ptr->cr           += plant_ptr->cr_growth;
-//plant_ptr->crown_width  += plant_ptr->cw_growth;
-//plant_ptr->expf         -= plant_ptr->expf_change;
-
-
-/* these are the variables that are updated using the */
-
 
 /* you also should turn this into pseudocode using  */
 /* \usepackage{algorithm}                           */
@@ -719,68 +651,6 @@ void cips_project_plant(
 
 
 
-
-
-/********************************************************************************/
-/*                  cips_calc_height_growth                                     */
-/********************************************************************************/
-/*  Description :   calc_height_growth                                          */   
-/*  Author      :   Jeff D. Hamann and Doug Maguire                             */
-/*  Date        :   June 16, 2011                                               */
-/*  Returns     :   void                                                        */
-/*  Comments    :   NONE                                                        */
-/*  Arguments   :                                                               */
-/*  return void                                                                 */
-/*  unsigned long *return_code  -   return code for calling function to check   */
-/*  total_height                -   total height of the subject tree            */
-/*  flew_site                   -   Flewellings site index                      */
-/*  h40                         -   height of 40 tallest trees per acre         */
-/*                              -   which is the same as the 100 tallest stems  */
-/*                                  per hectare                                 */
-/* -----------------------------------------------------------------------------*/
-/*  *height_growth              -   predicted height growth                     */
-/*  vector<double> *coeffs_ptr  -   pointer to a vector of doubles that         */
-/*                                  contain the coefficients for the            */
-/*                                  functional species code                     */
-/*  unsigned long  plant_type       - growth form of the plant record           */
-/********************************************************************************/
-/*  Formula : equation 4, page 32                                               */
-/*  Source  : Center for Intensive Planted-Forest Silviculture,                 */
-/*              2010 Annual Report                                              */
-/*              http://www.fsl.orst.edu/cips/                                   */
-/*  Coeffs  : ht_growth                                                         */
-/********************************************************************************/
-
-//		cips_calc_height_growth( return_code,
-//                                    plot_ptr,
-//                                    c_ptr,
-//                                    plant_ptr,
-//                                    h40,
-//                                    n_years_projected );
-
-
-//                                    plot_ptr,
-//                                    c_ptr,
-//                                    plant_ptr,
-//                                    h40,
-//                                    n_years_projected );
-
-    //double          total_height, 
-    //double          flew_site,
-    //double          pct_veg_cov,    /* todo: verify shrub pct cover */
-    //double          *height_growth,
-    //double          *coeffs_ptr,
-    //unsigned long   plant_type,
-
-    /* these will need to be removed for the release */
-    //double          *debug_rel_height,
-    //double          *debug_rh_mod_hg,
-    //double          *debug_cv_mod_hg,
-    //unsigned long   *debug_after_first_season_flag,
-    //double          *debug_delta_h_pot,
-    //double   *debug_psi
-
-
 void cips_calc_height_growth(
     unsigned long           *return_code,   
     struct PLOT_RECORD      *plot_ptr,
@@ -934,7 +804,6 @@ void cips_calc_height_growth(
 
     return;
 }
-
 
 
 
@@ -1158,216 +1027,8 @@ static void cips_calc_dbh_from_ht_and_veg_cov(
 
 
 
-/********************************************************************************/
-/*                  calc_d6_from_ht_and_veg_cov                                 */
-/********************************************************************************/
-/*  Description :                                                               */
-/* this function computes the basal diameter for the tree record, given the     */
-/* total height and the proportion of the area covered by competing vegetation  */
-/* on the plot                                                                  */
-/*  Author      :   Jeff D. Hamann and Douglas A. Maguire                       */
-/*  Date        :   June 20, 2011                                               */
-/*  Returns     :   void                                                        */
-/*  Comments    :   NONE                                                        */
-/*  return void                                                                 */
-/*  unsigned long *return_code  -   return code for calling function to check   */
-/*  total_height                -   total height of the subject tree            */
-/*  pct_veg_cover               -   total height of the subject tree            */
-/*  *pred_dbh                    -   predicted breast height diameter           */
-/*  vector<double> *coeffs_ptr       -   pointer to a vector of doubles that    */
-/*                                  contain the coefficients for the            */
-/*                                  functional species code                     */
-/********************************************************************************/
-/*  Formula : Not in Annual Report Document                                     */
-/*  Source  : Center for Intensive Planted-Forest Silviculture,                 */
-/*              2010 Annual Report                                              */
-/*              http://www.fsl.orst.edu/cips/                                   */
-/*  Coeffs  : DH                                                                */
-/********************************************************************************/
-//void cips_calc_d6_from_ht_and_veg_cov( 
-//    unsigned long           *return_code,
-//    struct PLOT_RECORD      *plot_ptr,
-//    struct PLANT_RECORD     *plant_ptr,
-//    struct COEFFS_RECORD    *coeffs_ptr )
-//{
-//
-//    double  part_a  = 0.0;
-//    double  part_b  = 0.0;
-//    double  X       = 0.0;
-
-//    double  b1      = 0.0;
-//    double  b2      = 0.0;
-//    double  b3      = 0.0;
-//    double  b4      = 0.0;
-//    double  b5      = 0.0;
-//    double  b6      = 0.0;
-//    double  b7      = 0.0;
-    
-
-    /* perform error check for the correct number of coeffs */
-//    if( coeffs_ptr == NULL )
-//    {
-//        *return_code = INVALID_COEFF;
-//        return;
-//    }
-
-    //if( total_height * FT2CM <= 15.0 )
-//    if( plant_ptr->tht * FT2CM <= 15.0 )
-//    {
-//        *return_code = INVALID_INPUT_VAL;
-//        return;
-//    }
-
-//    b1  = coeffs_ptr->d6_ht_veg_cov[0];  /* = -3.4952 */
-//    b2  = coeffs_ptr->d6_ht_veg_cov[1];  /* = 0.6412 */
-//    b3  = coeffs_ptr->d6_ht_veg_cov[2];  /* = 0.2687 */
-//    b4  = coeffs_ptr->d6_ht_veg_cov[3];  /* = 2.6949 */
-//    b5  = coeffs_ptr->d6_ht_veg_cov[4];  /* = 0.2507 */
-//    b6  = coeffs_ptr->d6_ht_veg_cov[5];  /* = -0.0370 */
-//    b7  = coeffs_ptr->d6_ht_veg_cov[6];  /* = 0.970 */
-
-    /* to prevent raising zero to a power */
-    /* add a little tiny value to the pct_veg_cover if it's zero */
-//    if( plot_ptr->shrub_pct_cover <= 0.000001f )
-//    {
-//        plot_ptr->shrub_pct_cover = 0.000001f;
-//    }
-
-    /* what the coeffs that need to go in here? */
-//    X = 1.0 - pow( 15.0 / ( plant_ptr->tht * FT2CM ), 0.5 );
- 
-//    part_b = ( 15.0 / ( plant_ptr->tht * FT2CM ) );
-
-    /* there's a bug in the equation provided by doug maguire */
-//    part_a =    b1 * part_b + 
-//                b2 * pow( part_b, 2.0f ) + 
-//                b3 * log( part_b + 0.0001f) + 
-//                b4 * pow( part_b, 0.5f );
-
-    /* entered from contract */
-//    plant_ptr->d6 = b5 * pow( plot_ptr->shrub_pct_cover, b6 ) * 
-//        pow( ( plant_ptr->tht * FT2CM ), b7 ) * pow( X, part_a );
-//    plant_ptr->d6 *= MM2IN;
-//    *return_code = CONIFERS_SUCCESS;
-
-//    if( plant_ptr->d6 < 0.0f )
-//    {
-//        plant_ptr->d6   = 0.0f;
-//        *return_code    = CONIFERS_ERROR;
-//    }
 
 
-//}
-
-
-
-
-/********************************************************************************/
-/*                  calc_d12_from_ht_and_veg_cov                                */
-/********************************************************************************/
-/*  Description :                                                               */
-/* this function computes the diameter at 30 cm for the tree record, given the  */
-/* total height and the proportion of the area covered by competing vegetation  */
-/* on the plot                                                                  */
-/*  Author      :   Jeff D. Hamann and Douglas A. Maguire                       */
-/*  Date        :   June 20, 2011                                               */
-/*  Returns     :   void                                                        */
-/*  Comments    :   NONE                                                        */
-/*  return void                                                                 */
-/*  unsigned long *return_code  -   return code for calling function to check   */
-/*  total_height                -   total height of the subject tree            */
-/*  pct_veg_cover               -   total height of the subject tree            */
-/*  *pred_d12                   -   predicted d30 diameter                      */
-/*  vector<double> *coeffs_ptr       -   pointer to a vector of doubles that    */
-/*                                  contain the coefficients for the            */
-/*                                  functional species code                     */
-/********************************************************************************/
-/*  Formula : Not in Annual Report Document                                     */
-/*  Source  : Center for Intensive Planted-Forest Silviculture,                 */
-/*              2010 Annual Report                                              */
-/*              http://www.fsl.orst.edu/cips/                                   */
-/*  Coeffs  : DH                                                                */
-/********************************************************************************/
-
-//void cips_calc_d12_from_ht_and_veg_cov(
-//    unsigned long           *return_code,
-//    struct PLOT_RECORD      *plot_ptr,
-//    struct PLANT_RECORD     *plant_ptr,
-//    struct COEFFS_RECORD    *coeffs_ptr )
-//{
-
-//    double  part_a  = 0.0;
-//    double  X       = 0.0;
-
-
-//    double  b1      = 0.0;
-//    double  b2      = 0.0;
-//    double  b3      = 0.0;
-//    double  b4      = 0.0;
-//    double  b5      = 0.0;
-//    double  b6      = 0.0;
-//    double  b7      = 0.0;
-
-    /* perform error check for the correct number of coeffs */
-//    if( coeffs_ptr == NULL )
-//    {
-//        *return_code = INVALID_COEFF;
-//        return;
-//    }
-
-    /* does this really apply? */
-    /* question: what are the ranges on the inputs this function */
-//    if( plant_ptr->tht * FT2CM <= 30.0f )
-//    {
-//        *return_code = INVALID_INPUT_VAL;
-//        return;
-//    }
-
-
-//    b1  = coeffs_ptr->d12_ht_veg_cov[0];  /* = -3.4952 */
-//    b2  = coeffs_ptr->d12_ht_veg_cov[1];  /* = 0.6412 */
-//    b3  = coeffs_ptr->d12_ht_veg_cov[2];  /* = 0.2687 */
-//    b4  = coeffs_ptr->d12_ht_veg_cov[3];  /* = 2.6949 */
-//    b5  = coeffs_ptr->d12_ht_veg_cov[4];  /* = 0.2507 */
-//    b6  = coeffs_ptr->d12_ht_veg_cov[5];  /* = -0.0370 */
-//    b7  = coeffs_ptr->d12_ht_veg_cov[6];  /* = 0.970 */
-
-    /* to prevent raising zero to a power */
-    /* add a little tiny value to the pct_veg_cover if it's zero */
-//    if( plot_ptr->shrub_pct_cover <= 0.000001f )
-//    {
-//        plot_ptr->shrub_pct_cover = 0.000001f;
-//    }
-
-    /* what the coeffs that need to go in here? */
-//    X = 1.0f - pow( 30.0f / ( plant_ptr->tht * FT2CM ), 0.5f );
- 
-    /* there's a bug in the equation provided by doug maguire */
-//    part_a = b1 * ( 30.0f / ( plant_ptr->tht * FT2CM ) ) + 
-//                b2 * pow( 30.0f / ( plant_ptr->tht * FT2CM ), 2.0f ) + 
-//                b3 * log( ( 30.0f / ( plant_ptr->tht * FT2CM ) ) + 0.0001f ) + 
-//                b4 * pow( 30.0f / ( plant_ptr->tht * FT2CM ), 0.5f );
-
-    /* entered from contract */
-    //*pred_d12 = 0.2507 * pow( pct_veg_cover, -0.0370 ) * pow( ( total_height * FT2CM ), 0.970 ) * pow( X, part_a );
-    //*pred_d12 = b5 * pow( pct_veg_cover, b6 ) * pow( ( total_height * FT2CM ), b7 ) * pow( X, part_a );
-    //*return_code = CONIFERS_SUCCESS;
-
-//    plant_ptr->d12 = b5 * pow( plot_ptr->shrub_pct_cover, b6 ) * 
-//        pow( ( plant_ptr->tht * FT2CM ), b7 ) * pow( X, part_a );
-
-//    plant_ptr->d12 *= MM2IN;
-    
-//    *return_code = CONIFERS_SUCCESS;
-
-//    if( plant_ptr->d12 < 0.0f )
-//    {
-//        plant_ptr->d12       = 0.0f;
-//        *return_code    = CONIFERS_ERROR;
-//    }
-//
-//
-//}
 
 
 
@@ -1740,6 +1401,7 @@ static void cips_calc_endemic_mortality(
 /********************************************************************************/
 /*                  cips_calc_cw_growth                                         */
 /********************************************************************************/
+/* modified in December 2014 by Ritchie for yrst addition to the model          */
 /* these values are plant level variables                                       */
 static void cips_calc_cw_growth(
     unsigned long           *return_code,
@@ -1762,19 +1424,25 @@ static void cips_calc_cw_growth(
 	double  c4;
 	double  c5;
 	double  c6;
-	//double  c7;  // unused jan 2014 mwr;
-	//double  c8;  // unused jan 2014 mwr;
-	//double  c9;  // unused jan 2014 mwr;
-	//double  c10; // unused jan 2014 mwr;
+	double  c7;  
+	double  c8;  
+	double  c9;  
+	double  c10; 
+	double  c11;
+	double  c12;
 
     double  ca_conifers;
 	double  ca_hardwoods;
 	double  ca_shrubs;
 
 // adding site index and basal area to the mix mwr november 2014;
-    double  dfba30;
-    double  si30;
-
+    double  dfba30;  // dfba at 30 cm in sqm/ha;
+    double  si30;    // flewellings site index in meters;
+// adding vp to mix December 2014;
+    double  dveg; //placeholder with change in cover percent;
+    double  vp;
+    double  wc;
+    
 	*return_code	= CONIFERS_SUCCESS;
 
     if( coeffs_ptr == NULL )
@@ -1819,9 +1487,8 @@ static void cips_calc_cw_growth(
 	    return;
     }
 //create variables for the cv growth;
-
-    si30   = plot_ptr->site_30;
-    dfba30 = plot_ptr->d12ba_c;
+    si30   = (plot_ptr->site_30)*FT2M;
+    dfba30 = (plot_ptr->d12ba_c)*FTAC2M2HA;
     
     temp_cwg    = 0.0f;
 
@@ -1880,32 +1547,42 @@ static void cips_calc_cw_growth(
         /* compute the converted vegetation cover (cv) where the */
         /* vc should be equal to ca_shrubs if one plant per plot */
         //initial_pct_cov = 100.0 * (MY_PI/(4.0*SQ_FT_PER_ACRE))*(crown_width*crown_width)*expf;
+
         initial_pct_cov = 100.0f * (MY_PI/( 4.0f * SQ_FT_PER_ACRE ) ) * 
                                     (plant_ptr->crown_width * plant_ptr->crown_width) * 
                                     plant_ptr->expf;
+         wc = initial_pct_cov;
       
         /* added from doug maiwaring's fits */
         /* these are the second half of the coeffs */
-        c0 = coeffs_ptr->cw_growth[11]; // =   125.8;                      
-        c1 = coeffs_ptr->cw_growth[12]; // = -1.1124;            
-        c2 = coeffs_ptr->cw_growth[13]; // = 0.07498;                        
-        c3 = coeffs_ptr->cw_growth[14]; // = -8.3251;            
-        c4 = coeffs_ptr->cw_growth[15]; // = -0.06569;                           
+        c0 =  0.419;  // coeffs_ptr->cw_growth[0];                       
+        c1 = -0.0199; // coeffs_ptr->cw_growth[1];               
+        c2 = -0.1388; // coeffs_ptr->cw_growth[2];                        
+        c3 =  0.0802; // coeffs_ptr->cw_growth[3];             
+        c4 =  0.0569; // coeffs_ptr->cw_growth[4];                            
+
+        c5 = -0.6222;
+        c6 =  0.1467;
+        c7 = -0.0598;
+        c8 =  0.0262;
+        c9 = -0.892;
+        c10=  0.0247;
+        c11= -0.0871;
+        c12= -0.3718;
 
         /* you need to conver the change in total cover to the change in crown width    */
         /* for the plant                                                                */
-        /* in this equation conifer means douglas-fir                                   */
-        /* these values are normally negative                                           */
-        //temp_cover_growth = c0 + 
-        //                    ( c1 + c2 * plantation_age ) * plot_ptr->shrub_pct_cover + 
-        //                    ( c3 + c4 * ( conifer_d12_basal_area * FTAC2M2HA ) ) * plantation_age;
         
-
-        /* THIS IS WHERE THE PROBLEM IS */
-        /* use the plot level variable for the d12 basal area in conifers */
-        temp_cover_growth = c0 + 
-                            ( c1 + c2 * plantation_age ) * plot_ptr->shrub_pct_cover + 
-                            ( c3 + c4 * ( plot_ptr->d12ba_c * FTAC2M2HA ) ) * plantation_age;
+       vp   = (exp(c0 + c1 * wc + c2 * dfba30 + c3 * (yrst + 1) + c4 * (si30))) / 
+          (1 + exp(c0 + c1 * wc + c2 * dfba30 + c3 * (yrst + 1) + c4 * (si30)));
+        
+       dveg = vp * (250 - wc) * exp(-exp(c5 + c6 * (plantation_age + 1) + c7 * log(yrst + 1) + c8 * (si30))) + 
+            (vp - 1) * wc * (1 - exp(-exp(c9 + c10 * dfba30 + c11 * log(plantation_age + 1) + c12 * log(yrst + 1))));        
+        
+        temp_cover_growth = dveg;
+		//                     c0 + 
+        //                    ( c1 + c2 * plantation_age ) * plot_ptr->shrub_pct_cover + 
+        //                    ( c3 + c4 * ( plot_ptr->d12ba_c * FTAC2M2HA ) ) * plantation_age;
 
         /* meaning that the results of the equation predicted a 3.3459999999999894 percent */
         /* increase in the percent cover. This value needs to be translated into the change in crown width */
