@@ -1,15 +1,15 @@
 Package: rconifers
-Version: 1.1.0
-Date: 2014/12/04
+Version: 1.1-0
+Date: 2014-12-04
 Title: R interface to the CONIFERS forest growth model
 Author: Jeff D. Hamann and
         Martin W. Ritchie <mrtichie@fs.fed.us> and 
-        Doug Mainwaring <doug.mainwaring@oregonstate.edu>
+        Doug Mainwaring <doug.mainwaring@oregonstate.edu> and
 	Nathaniel Osborne <Nathaniel.Osborne@oregonstate.edu>
 Maintainer: Martin Ritchie <mritchie@fs.fed.us>
 Depends: R (>= 3.0.0), utils
 Description: This package contains functions for simulating future
- forest conditions using the CONIFERS growth model.
+ forest conditions using the CONIFERS growth model with an R interface.
 License: GPL (>=2)
 URL: http://www.r-project.org ,
      http://www.fs.fed.us/psw/programs/ecology_of_western_forests/projects/conifers ,
