@@ -165,7 +165,7 @@ SEXP r_reseed( SEXP ctl )
 
    SEXP ans;
    PROTECT(ans = allocVector(INTSXP, 1));
-
+   use_random_error = 0;
    /* which one is the proper way to perform this operation */
    /* intitialize the config variables */
    use_random_error  = asInteger( get_list_element( ctl, "use.random.error" ) );
