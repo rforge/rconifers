@@ -4,6 +4,16 @@ Please note that only the most significant changes are reported here.
 
 A full ChangeLog is available in the log messages of the SVN repository.
 
+CHANGES IN VERSION 1.1-1
+
+* Modified the description file 
+
+* Quality control for memory management in the C++ source code.  Some issues remain
+but, these issues are not fatal errors at the current time.  Edits to the C++ source 
+code (memory handling) will be necessary to make rconifers CRAN ready.
+
+--nlo 3/24/2015
+
 CHANGES IN VERSION 1.1-0
 
 * Made substatial changes to the rconifers interface correcting problems with
