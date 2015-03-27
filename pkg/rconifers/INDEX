@@ -2,21 +2,21 @@ calc.max.sdi            Calculate the maximum stand density index using
                         the CONIFERS forest growth model
 impute                  Imputes missing values using the CONIFERS
                         imputation functions
+plants.cips        	Simple plant data set for the CIPS Variant of
+                        the CONIFERS growth model
 plants.smc              Simple plant data set for the SMC variant of
                         the CONIFERS growth model.
 plants.swo              Simple plant data set for the SWO Variant of
                         the CONIFERS growth model
 plants.swohybrid        Simple plant data set for the SWO-Hybrid Variant of
                         the CONIFERS growth model
-plants.cips        	Simple plant data set for the CIPS Variant of
-                        the CONIFERS growth model
+plots.cips         	Example plots data set for CIPS Variant of the
+                        CONIFERS growth model
 plots.smc               Example plots data set for CONIFERS growth
                         model
 plots.swo               Example plots data set for SWO Variant of the
                         CONIFERS growth model
 plots.swohybrid         Example plots data set for SWO-Hybrid Variant of the
-                        CONIFERS growth model
-plots.cips         	Example plots data set for CIPS Variant of the
                         CONIFERS growth model
 print.sample.data       Print a CONIFERS sample.data object
 project                 Projects a sample.data object using the
@@ -24,10 +24,13 @@ project                 Projects a sample.data object using the
 rand.seed               Initialize or reset the random number generator
                         for the CONIFERS forest growth model
 rconifers               Using the CONIFERS growth model from R
+rconifers-internal	Internal function list
 sample.data             CONIFERS forest growth model sample data
 set.species.map         Set and update the species mapping table in the
                         CONIFERS simulator
 set.variant             Set the CONIFERS growth model variant
+sp.sums                 A summary of a CONIFERS sample.data object by
+                        species
 species.swo             Species table for the SWO variant of the
                         CONIFERS growth model
 species.smc             Species table for the SMC variant of the
@@ -36,12 +39,10 @@ species.swohybrid       Species table for the SWO-Hybrid variant of the
                         CONIFERS growth model
 species.cips        	Species table for the CIPS variant of the
                         CONIFERS growth model
-sp.sums                 A summary of a CONIFERS sample.data object by
-                        species
 summary.sample.data     Summary of a CONIFERS sample.data object
-
 thin                    Thin a CONIFERS sample.data object with
                         user-defined settings.
+variants		Prints out variant indices
 vegman			Thin vegetation to a target percent cover
 
 
