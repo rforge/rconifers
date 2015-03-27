@@ -1692,7 +1692,7 @@ SEXP r_impute_missing_values(
    free( plots_ptr );
    free( plants_ptr );
 
-   UNPROTECT( 1 );
+//   UNPROTECT( 1 );
    return ret_val;
 
 
