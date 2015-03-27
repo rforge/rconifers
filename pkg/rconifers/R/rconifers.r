@@ -356,8 +356,8 @@ impute <- function( x,
     }
      
   x$plants$sp.code <- as.character( x$plants$sp.code )
-  val <- build.sample.data( .Call( "r_impute_missing_values",
-                                  x,
+  val <- process.sample.data( .Call( "r_impute_missing_values",
+ 	                            x,
                                   control,
                                   PACKAGE="rconifers" ) )
   val
