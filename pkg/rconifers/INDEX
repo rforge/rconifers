@@ -34,10 +34,15 @@ species.smc             Species table for the SMC variant of the
                         CONIFERS growth model
 species.swohybrid       Species table for the SWO-Hybrid variant of the
                         CONIFERS growth model
-speicies.cips        	Species table for the CIPS variant of the
+species.cips        	Species table for the CIPS variant of the
                         CONIFERS growth model
 sp.sums                 A summary of a CONIFERS sample.data object by
                         species
 summary.sample.data     Summary of a CONIFERS sample.data object
+
 thin                    Thin a CONIFERS sample.data object with
                         user-defined settings.
+vegman			Thin vegetation to a target percent cover
+
+
+
