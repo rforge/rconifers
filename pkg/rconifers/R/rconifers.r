@@ -475,8 +475,11 @@ sp.sums <- function( x ) {
   
   df <- as.data.frame( t(sapply( x.by.sp, sp.sums.f, nrow(x$plots) )) )
   names( df ) <- c("qmd","tht","ba","bhexpf","texpf")
-
-  df
+  
+  df$ba[is.na(df$ba)] <- 0
+  df$qmd[is.na(df$qmd)] <- 0
+    
+  return(df)
 }
 
 ## To Do!: This needs a manual page
@@ -522,11 +525,15 @@ plot.sample.data <- function( x, digits = max( 3, getOption("digits") - 1 ),... 
 
     ## generate a pie chart of the basal area, if there is any
     ba <- sp.sums( x )$ba
-    if( sum( ba ) > 0 ) {
+    if ( sum( ba ) > 0 ) {
       names(ba) <- rownames( sp.sums( x ) )
       pie( ba[ba>0], main="Basal Area" )
     }
-
+    else{
+      plot.new()
+      legend("center", c("BA Equal Zero"), cex=3, bty='n')
+    }
+    
     ## close out the plot.
     par(opar)
     
