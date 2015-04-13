@@ -4,6 +4,15 @@ Please note that only the most significant changes are reported here.
 
 A full ChangeLog is available in the log messages of the SVN repository.
 
+CHANGES IN VERSION 1.1-2
+
+* Modified the memory handling Protect/unptrotect statements to get rid of the memory
+(stack) errors at run-time.
+
+
+--mwr 4/9/2015
+
+
 CHANGES IN VERSION 1.1-1
 
 * Modified the description file 
